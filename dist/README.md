@@ -1,37 +1,26 @@
 # Changelog
-*Please for the love of all that you hold dear, do everyone a favor and include a changelog here rather than making people guess at the capabilities of your module since last release*
+### 1.0
+- NPC Randomizer Inital Release
+- Compendium Patcher Inital Release
 
 # Description
-This is a typescript template to get you started. This is not intended for beginners.
+SWADE Toolkit is the successor for SWADE Macros Simple. It includes a variety of tools (both macros and other more complicated Quality of Life improvements) that help with making the SWADE experience just a little bit better. 
 
-Please use the javascript template as necessary for your stuff.
+All the features can be toggled on/off in the settings. If you have a problem with anything, please ask in the #swade channel in the Foundry Discord. 
 
+## NPC Randomizer
+![NPC_Randomizer](./readme_assets/npc_randomizer.png)
 
-## Manifest Plus
-Adds the following fields to the manifest for package browsers to pick up and show information better:
+Select an actor template, pick compendiums to roll on, and it'll populate the actor with random items. It'll keep everything from the template except anything the SWADE system considers an "item"
 
-```
-- includes: [] # list of files to include in the zip
-- icon: "" # link to icon img
-- cover: "" #link to cover img
-- screenshots: [] #links to screenshot images
-- video: ""
-- authors: [
-  {
-    "name": "name",
-    "email": "email",
-    "discord": "discord"
-  }
-]
+## Compendium Patcher
+![Compendium_Patcher](./readme_assets/compendium_patcher.png)
+Pick a folder of actors, pick compendiums to use to patch them.
+It'll go through each actor, and if it finds an item in the compendiums you've selected that matches the name of the actor's item, it'll replace it with the compendium item.
 
-```
+It will preserve skills die types.
 
-
-## Versioned Releases
-
-The Github Actions script will automatically create a Latest release which will always have a module.json that points to the latest release, and a versioned release whenever you update the version in your module.json. 
-
-This allows people who depend on a specific version of your module to just install that and be version locked. The versioned releases will *not* auto update. 
+Useful for updating descriptions and other info for imported actors that you might otherwise have as extensive compendiums.
 
 
 # License

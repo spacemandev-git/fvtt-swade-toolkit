@@ -8,7 +8,7 @@
       "discord": "spacemandev#6256"
     }
   ],
-  "version": "0.0.1",
+  "version": "1.0.0",
   "minimumCoreVersion": "0.6.0",
   "compatibleCoreVersion": "0.7.2",
   "url": "",
@@ -22,7 +22,8 @@
     "./styles/**",
     "./templates/**",
     "./module.json",
-    "./README.md"
+    "./README.md",
+    "./readme_assets/"
   ],
   "media": [],
   "esmodules": [
