@@ -1,0 +1,10 @@
+{
+  "NPC_Randomizer": {
+    "NPC_Randomizer": "NPC Randomizer",
+    "ActorName": "New Actor Name",
+    "ActorTemplate": "Actor Template",
+    "PackNames": "Compendium Names",
+    "DrawTimes": "Pick X Times",
+    "BuildActorButton": "Build Actor"
+  }
+}

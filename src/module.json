@@ -1,7 +1,7 @@
 {
-  "name": "foundry-typescript-template",
-  "title": "Typescript Template",
-  "description": "", 
+  "name": "swade-toolkit",
+  "title": "SWADE Toolkit",
+  "description": "A collection of useful small improvements for SWADE System", 
   "authors": [
     {
       "name": "spacemandev",
@@ -24,25 +24,12 @@
     "./module.json",
     "./README.md"
   ],
-  "media": [
-    {
-      "type": "icon",
-      "location": ""
-    }, 
-    {
-      "type": "cover",
-      "location": ""
-    },
-    {
-      "type": "screenshot",
-      "location": ""
-    }
-  ],
+  "media": [],
   "esmodules": [
-    "scripts/module.js"
+    "scripts/swade-toolkit.js"
   ],
   "styles": [
-    "styles/module.css"
+    "styles/swade-toolkit.css"
   ],
   "languages": [
     {

@@ -1,0 +1,60 @@
+<form style="display:flex; flex-direction:column">
+  <!-- Select Actor Name & Adjective RollPack-->
+  <div style="flex:1; display:flex">
+    <span style="flex:2">
+      {{localize 'NPC_Randomizer.ActorName'}}
+    </span> 
+    <input style="flex:3" type="text" name="actorName"></input>
+  </div> 
+
+  <div style="flex:1; display:flex;float:right">
+    <span style="flex:2">
+      {{localize 'NPC_Randomizer.ActorTemplate'}} 
+    </span>
+    <select style="flex:3" name="actorTemplate">
+      {{#each actors}}
+      <option value="{{this.id}}">{{this.name}}</option>
+      {{/each}}
+    </select>
+  </div> 
+
+  <p></p>
+  <p></p>
+
+  <div style="display:flex;flex-direction:column">
+  <h2>
+    <span style="flex:4">{{localize "NPC_Randomizer.PackNames"}}</span>
+    <span style="flex:1;float:right">{{localize "NPC_Randomizer.DrawTimes"}}</span>
+  </h2>
+  {{#each packs}}
+    <div style="display:flex">
+      <span style="flex:4">{{this.title}}</span>
+      <input name="{{this.collection}}" value=0 style="width:25px;float:right;flex:1" type="number"></input>
+    </div>
+  {{/each}}
+  </div>
+
+  <button type="submit">{{localize "NPC_Randomizer.BuildActorButton"}}</button>
+</form>
+
+{{!--
+   <div style="flex:1;">
+    <!-- Select Actor Edges RollPacks -->
+    <button id="edgePacks">{{localize "NPC_Randomizer.EdgePackSelection"}}</button>
+  </div>
+  <div style="flex:1">
+    <!-- Select Actor Hindrances RollPacks -->
+    <button id="hindrancePacks">{{localize "NPC_Randomizer.HindrancePackSelection"}}</button>
+  </div>
+  <div style="flex:1">
+    <!-- Select Actor Items RollPacks -->
+    <button id="powerPacks">{{localize "NPC_Randomizer.PowerPackSelection"}}</button>
+  </div>
+  <div style="flex:1">
+    <!-- Select Actor Powers RollPacks -->
+    <button id="itemPacks">{{localize "NPC_Randomizer.ItemPackSelection"}}</button>
+  </div>
+  <p></p>
+  <p></p>
+  <button id="buildActor">{{localize "NPC_Randomizer.BuildActorButton"}}</button> 
+--}}

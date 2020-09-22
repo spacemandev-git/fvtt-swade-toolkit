@@ -1,0 +1,13 @@
+<div style="display:flex;flex-direction:column">
+  <h2>
+    <span style="flex:4">{{localize "NPC_Randomizer.PackNames"}}</span>
+    <span style="flex:1;float:right">{{localize "NPC_Randomizer.DrawTimes"}}</span>
+  </h2>
+  {{log rollPacks}}
+  {{#each rollPacks}}
+    <div style="display:flex">
+      <span style="flex:4">{{this.name}}</span>
+      <input id="{{this.collection}}" value={{this.value}} style="width:25px;float:right;flex:1" type="number"></input>
+    </div>
+  {{/each}}
+</div>

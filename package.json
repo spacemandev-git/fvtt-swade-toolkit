@@ -1,10 +1,11 @@
 {
-  "name": "foundry-typescript-template",
+  "name": "swade-toolkit",
   "version": "1.0.0",
   "description": "Foundry VTT Typescript Template",
   "main": "index.js",
   "scripts": {
-    "build": "gulp build"
+    "build": "gulp build",
+    "update": "gulp update"
   },
   "author": "",
   "license": "MIT",
