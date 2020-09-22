@@ -1,0 +1,30 @@
+<form style="display:flex; flex-direction:column">
+  <div style="flex:1; display:flex;float:right">
+    <span style="flex:2">
+      {{localize 'Compendium_Patcher.ActorFolder'}} 
+    </span>
+    <select style="flex:3" name="actorFolder">
+      {{#each folders}}
+      <option value="{{this.id}}">{{this.name}}</option>
+      {{/each}}
+    </select>
+  </div> 
+
+  <p></p>
+  <p></p>
+
+  <div style="display:flex;flex-direction:column">
+  <h2>
+    <span style="flex:4">{{localize "Compendium_Patcher.PackNames"}}</span>
+    <span style="flex:1;float:right">{{localize "Compendium_Patcher.PatchWith"}}</span>
+  </h2>
+  {{#each packs}}
+    <div style="display:flex">
+      <span style="flex:4">{{this.title}}</span>
+      <input name="{{this.collection}}" style="width:25px;float:right;flex:1" type="checkbox"></input>
+    </div>
+  {{/each}}
+  </div>
+
+  <button type="submit">{{localize "Compendium_Patcher.Patch"}}</button>
+</form>

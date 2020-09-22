@@ -3,8 +3,6 @@ npc_radomizer()
 async function npc_radomizer() {
   const l = (key:string) => {return game.i18n.localize("NPC_Randomizer."+key)}
   class NPC_Randomize_Form extends FormApplication{
-    selectedPacks = []
-
     constructor(obj={}, options={}){
       super(obj,  options)
     }
@@ -22,8 +20,7 @@ async function npc_radomizer() {
     getData(){
       return {
         actors: game.actors.entries,
-        //@ts-ignore
-        packs: game.packs.entries.filter(el => el.entity == "Item")
+        packs: game.packs.filter(el => el.entity == "Item")
       }
     }
 
@@ -47,8 +44,8 @@ async function npc_radomizer() {
               newItem = packContent[Math.floor(Math.random() * packContent.length)]
             }
             packItems.push(newItem)
-            items.push(newItem) //Concat Didn't work for some reason :shrug:
           }
+          items = items.concat(packItems)
         }
       }
       let newActor = await Actor.create(duplicate(game.actors.find( (actor:Actor) => actor.id == data.actorTemplate)))

@@ -14,7 +14,6 @@ function npc_radomizer() {
         class NPC_Randomize_Form extends FormApplication {
             constructor(obj = {}, options = {}) {
                 super(obj, options);
-                this.selectedPacks = [];
             }
             static get defaultOptions() {
                 return mergeObject(super.defaultOptions, {
@@ -28,8 +27,7 @@ function npc_radomizer() {
             getData() {
                 return {
                     actors: game.actors.entries,
-                    //@ts-ignore
-                    packs: game.packs.entries.filter(el => el.entity == "Item")
+                    packs: game.packs.filter(el => el.entity == "Item")
                 };
             }
             _updateObject(evt, data) {
@@ -52,8 +50,8 @@ function npc_radomizer() {
                                     newItem = packContent[Math.floor(Math.random() * packContent.length)];
                                 }
                                 packItems.push(newItem);
-                                items.push(newItem); //Concat Didn't work for some reason :shrug:
                             }
+                            items = items.concat(packItems);
                         }
                     }
                     let newActor = yield Actor.create(duplicate(game.actors.find((actor) => actor.id == data.actorTemplate)));
