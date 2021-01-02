@@ -1,12 +1,6 @@
 import * as Handlers from './Handlers.js';
 
 export class ActionHandler{
-  //Generic Handler Object
-  //Register a setting for switching this Handler on/off
-  //Register a setting for list of transformers
-  //Register a form app that lets you enable/disable/remove transformers (or clear All) for a given entity
-  //SHOULD NOT MAINTAIN STATE OUTSIDE OF SETTINGS! 
-
   /**
    * This is a list of triggers that the Action Handler listens for
    * It doesn't correspond 1:1 with the name of the hooks because the Handler repackages hooks to better suit these triggers
@@ -26,6 +20,14 @@ export class ActionHandler{
     //SwadeActor, SwadeItem, ChatMessage objects
     Hooks.on("swadeChatCard", async (actor:any, item:any, chatCard:any) => {
       let transformers = game.settings.get("swade-toolkit", "action-handler-transformers").ShowChatCard
+      
+      // Transformers will be executed from lowest to highest order
+      transformers = transformers.sort((a,b) => {
+        if(a.execOrderNum>b.execOrderNum){return 1;}
+        else if(a.execOrderNum<b.execOrderNum){return -1;}
+        return 0;
+      })
+
       for(let transformer of transformers){
         let transformFunction = eval(transformer.transformer);
         let transformedResult = await transformFunction(actor, item, chatCard)
@@ -113,5 +115,26 @@ export class ActionHandler{
     }
   }
 
-  public async removeTransformer(triggerName:string, transformerName:string){}
+  /**
+   * Removes a registered transformer from the trigger list
+   * @param triggerName 
+   * @param transformerName 
+   */
+  public async removeTransformer(triggerName:string, transformerName:string){
+    try{
+      if(!ActionHandler.ActionTriggers.includes(triggerName)){
+        throw new Error(`Trigger ${triggerName} not found in Handler list of triggers.`)
+      }
+      let transformers = game.settings.get("swade-toolkit", "action-handler-transformers")
+      if(transformers[triggerName].find(el => el.name == transformerName) == undefined){
+        return true;
+      } else {
+        transformers[triggerName] = transformers[triggerName].filter(el => el.name != transformerName)
+      }
+      await game.settings.set("swade-toolkit","action-handler-transformers", transformers)
+      return true;
+    } catch (e) {
+      throw e;
+    }
+  }
 }

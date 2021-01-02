@@ -25,5 +25,6 @@ export interface ITransformer {
   isActive: boolean,
   entityID: string,
   entityType: "Token" | "Actor" | "Scene" | "JournalEntry" | "RollTable",
+  execOrderNum: number,
   transformer: string //eval this to get the transformer function
 }

@@ -11,17 +11,23 @@ Hooks.on("ready", () => {
 
 Hooks.on("swade-toolkit-handlers-ready", ()=>{
   //return; //Uncomment for packaging for production
+
+  //remove the existing one so you can always have fresh code during testing
+  game.handlers.action.removeTransformer("ShowChatCard", `reload-transformer-${game.actors.entities[0].id}`)
   let reloadTransformer: Handlers.ITransformer = {
     name: `reload-transformer-${game.actors.entities[0].id}`,
     isActive: true,
     entityID: game.actors.entities[0].id,
     entityType: "Actor",
-    transformer: `(actor, item, actionID, roll) => {
+    execOrderNum: 1,
+    transformer: ((actor, item, actionID, roll) => {
       console.log("Hello");
       return {actor, item, actionID, roll}
-    }`
+    }).toString()
   }
-  console.log(reloadTransformer)
   game.handlers.action.registerTransformer("ShowChatCard", reloadTransformer)
 
+
+  //Simple handler that removes the # of bullets used by an action as stipulated in the shots
+  
 })
