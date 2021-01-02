@@ -1,4 +1,8 @@
 # Changelog
+### 1.0.1
+- Compendium Patcher issue #1 adn #4 fixed (arcane background for powers preserved, and patched items replaced by old ones after reload)
+- Updated Foundry compatible version to 0.79
+
 ### 1.0
 - NPC Randomizer Inital Release
 - Compendium Patcher Inital Release
