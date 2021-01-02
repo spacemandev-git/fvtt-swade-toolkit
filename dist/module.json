@@ -1,16 +1,11 @@
 {
   "name": "swade-toolkit",
   "title": "SWADE Toolkit",
-  "description": "A collection of useful small improvements for SWADE System", 
-  "authors": [
-    {
-      "name": "spacemandev",
-      "discord": "spacemandev#6256"
-    }
-  ],
+  "description": "A collection of useful small improvements for SWADE System",
+  "author": "spacemandev#6256",
   "version": "1.0.0",
   "minimumCoreVersion": "0.6.0",
-  "compatibleCoreVersion": "0.7.2",
+  "compatibleCoreVersion": "0.7.9",
   "url": "",
   "manifest": "",
   "download": "",
@@ -32,11 +27,9 @@
   "styles": [
     "styles/swade-toolkit.css"
   ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "lang/en.json"
-    }
-  ]
+  "languages": [{
+    "lang": "en",
+    "name": "English",
+    "path": "lang/en.json"
+  }]
 }

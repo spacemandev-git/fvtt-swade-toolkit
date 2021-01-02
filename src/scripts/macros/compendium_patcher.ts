@@ -29,7 +29,6 @@ async function compendium_patcher(){
         console.log(data)
         //@ts-ignore
         let actors = game.folders.get(data.actorFolder).content
-        let allItems = [];
         let packs = game.packs.map((pack) => {
           if(data[pack.collection] == true){
             return pack
@@ -37,32 +36,32 @@ async function compendium_patcher(){
         })
         .filter(el => el != undefined)
 
+        let packContents = []
 
         for(let pack of packs){
-          allItems = allItems.concat(await pack.getContent());
+          packContents.push(await pack.getContent());
+        }
+        
+        const findItem = (item) => {
+          for(let pack of packContents){
+            let foundItem = pack.find(el => (el.name == item.name && el.type == item.type))
+            if(foundItem){return foundItem;}
+          }
+          return undefined;
         }
 
         for(let actor of actors){
           for(let item of actor.items){
-            let patchedItem = allItems.find(el => el.name == item.name)
-            if(!patchedItem){continue}
-            patchedItem = duplicate(patchedItem);
-
-            if(item.type == "skill"){
-              //Don't patch the whole data, only the description for skills            
+            let patchedItem = findItem(item);
+            if(!patchedItem){continue;} //no matching item found in any of the packs
+            patchedItem = duplicate(patchedItem); //necessary so we aren't passing in the reference
+            if(item.type == "skill" || item.type == "power"){
+              //powers specify an AB and skills have die types associated with them so don't mess with those
               item.update({
-                "data.description": patchedItem.data.description,
-                "flags": patchedItem.flags,
-                "img": patchedItem.img,
-                "effects": patchedItem.effects
-              }, {})
+                "data.description": patchedItem.data.description
+              })
             } else {
-              item.update({
-                "data": patchedItem.data,
-                "flags": patchedItem.flags,
-                "img": patchedItem.img,
-                "effects": patchedItem.effects
-              }, {})  
+              item.update(patchedItem)
             }
           }
         }
