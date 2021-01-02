@@ -1,20 +1,18 @@
-import * as Handlers from './handlers/Handlers.js'
+import {Handler} from './handlers/Handler.js'
 Hooks.on("ready", () => {
-  game.handlers = {
-    action: new Handlers.ActionHandler(),
-  }
+  game.automation = new Handler();
 
-  Hooks.call("swade-toolkit-handlers-ready")
+  Hooks.call("swade-toolkit-handler-ready")
 })
 
 /* Test Script Area */
-
+import {ITransformer} from './handlers/Handler.js'
 Hooks.on("swade-toolkit-handlers-ready", ()=>{
   //return; //Uncomment for packaging for production
 
   //remove the existing one so you can always have fresh code during testing
-  game.handlers.action.removeTransformer("ShowChatCard", `reload-transformer-${game.actors.entities[0].id}`)
-  let reloadTransformer: Handlers.ITransformer = {
+  game.automation.removeTransformer("ShowChatCard", `reload-transformer-${game.actors.entities[0].id}`)
+  let reloadTransformer: ITransformer = {
     name: `reload-transformer-${game.actors.entities[0].id}`,
     isActive: true,
     entityID: game.actors.entities[0].id,
@@ -25,8 +23,7 @@ Hooks.on("swade-toolkit-handlers-ready", ()=>{
       return {actor, item, actionID, roll}
     }).toString()
   }
-  game.handlers.action.registerTransformer("ShowChatCard", reloadTransformer)
-
+  game.automation.registerTransformer("ShowChatCard", reloadTransformer)
 
   //Simple handler that removes the # of bullets used by an action as stipulated in the shots
   
