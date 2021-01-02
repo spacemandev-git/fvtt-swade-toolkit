@@ -18,5 +18,10 @@
     "Confirm2": "ARE YOU SURE YOU'RE SURE?",
     "Accept": "Confirm",
     "Accept2": "Please just patch my actors."
+  },
+  "SWADE_Handlers": {
+    "Automation": "Automation",
+    "Transformers_Button": "Transformers",
+    "Transformers_Hint": "Enable/Disable any transformers for this handler."
   }
 }
