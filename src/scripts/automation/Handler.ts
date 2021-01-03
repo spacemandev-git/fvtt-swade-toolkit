@@ -6,7 +6,7 @@ export class Handler{
    * 
    * When updating this list, ALSO update the DEFAULTS for the Transformers DB
    */
-  static Triggers = ["TraitRoll", "ShowChatCard", "ItemAction"]
+  Triggers = ["TraitRoll", "ShowChatCard", "ItemAction"]
 
   constructor(){
    this.registerSettings();
@@ -62,9 +62,9 @@ export class Handler{
 
     */
     game.settings.registerMenu("swade-toolkit", "handler-menu", {
-      name: game.i18n.localize("SWADE_Handlers.Automation"),
-      label: game.i18n.localize("SWADE_Handlers.Transformers_Button"),
-      hint: game.i18n.localize("SWADE_Handlers.Transformers_Hint"),
+      name: game.i18n.localize("Automation.Automation"),
+      label: game.i18n.localize("Automation.Transformers_Button"),
+      hint: game.i18n.localize("Automation.Transformers_Hint"),
       type: TransformerSettings,
       restricted: false,
     });
@@ -99,7 +99,7 @@ export class Handler{
    */
   public async registerTransformer(triggerName: string, transformerObj:ITransformer){
     try{
-      if(!Handler.Triggers.includes(triggerName)){
+      if(!this.Triggers.includes(triggerName)){
         throw new Error(`Trigger ${triggerName} not found in list of triggers.`)
       }
       let transformers = game.settings.get("swade-toolkit", "transformers")
@@ -131,7 +131,7 @@ export class Handler{
    */
   public async removeTransformer(triggerName:string, transformerName:string){
     try{
-      if(!Handler.Triggers.includes(triggerName)){
+      if(!this.Triggers.includes(triggerName)){
         throw new Error(`Trigger ${triggerName} not found in list of triggers.`)
       }
       let transformers = game.settings.get("swade-toolkit", "transformers")
@@ -173,7 +173,7 @@ export class TransformerSettings extends FormApplication{
   static get defaultOptions(){
     return mergeObject(super.defaultOptions, {
       id: "swade-toolkit-transformer-settings",
-      title: game.i18n.localize("SWADE_Handlers.Automation"),
+      title: game.i18n.localize("Automation.Automation"),
       template: 'modules/swade-toolkit/templates/TransformerSettings.hbs'
     })
   }
@@ -186,6 +186,8 @@ export interface ITransformer {
   isActive: boolean,
   entityID: string,
   entityType: "Token" | "Actor" | "Scene" | "JournalEntry" | "RollTable",
+  duration: number, //in seconds
+  trigger: string,
   execOrderNum: number,
   description: string,
   transformer: string //eval this to get the transformer function

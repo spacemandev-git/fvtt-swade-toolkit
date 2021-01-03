@@ -43,13 +43,13 @@
       {{#each this}}
       <div class="transformerRow" id="{{@../key}}-{{this.name}}-row">
         <span style="flex:7">{{@../key}}: {{this.name}}</span>
-        <i style="flex:1" class="fa fa-question" title="{{localize 'SWADE_Handlers.Info'}}" id="info-{{@../key}}-{{this.name}}"></i>
+        <i style="flex:1" class="fa fa-question" title="{{localize 'Automation.Info'}}" id="info-{{@../key}}-{{this.name}}"></i>
         {{#if this.isActive}}
-        <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'SWADE_Handlers.Disable'}}" id="active-{{@../key}}-{{this.name}}"></i>
+        <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'Automation.Disable'}}" id="active-{{@../key}}-{{this.name}}"></i>
         {{else}}
-        <i style="flex:1;color:#CCC" class="fa fa-power-off" title="{{localize 'SWADE_Handlers.Enable'}}" id="active-{{@../key}}-{{this.name}}"></i>
+        <i style="flex:1;color:#CCC" class="fa fa-power-off" title="{{localize 'Automation.Enable'}}" id="active-{{@../key}}-{{this.name}}"></i>
         {{/if}}
-        <i style="flex:1" class="fa fa-trash" title="{{localize 'SWADE_Handlers.Delete'}}" id="delete-{{@../key}}-{{this.name}}"></i>
+        <i style="flex:1" class="fa fa-trash" title="{{localize 'Automation.Delete'}}" id="delete-{{@../key}}-{{this.name}}"></i>
       </div>
       {{/each}}
     {{/each}}

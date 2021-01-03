@@ -19,10 +19,10 @@
     "Accept": "Confirm",
     "Accept2": "Please just patch my actors."
   },
-  "SWADE_Handlers": {
+  "Automation": {
     "Automation": "Automation",
-    "Transformers_Button": "Transformers",
-    "Transformers_Hint": "Enable/Disable any transformers for this handler.",
+    "Transformers_Button": "Rulesets",
+    "Transformers_Hint": "Enable/Disable any automation rulesets.",
     "Info": "Info",
     "Disable": "Disable",
     "Enable": "Enable",
@@ -31,6 +31,13 @@
     "Trigger": "Trigger",
     "Function": "Function",
     "Execute_Order": "Execute Order",
-    "Close":"Close"
+    "Close":"Close",
+    "Add_Transformer": "Add Transformer",
+    "Transformer_Name": "Transformer Name",
+    "Duration": "Duration (in seconds)",
+    "Entity_ID": "Entity ID",
+    "Entity_Type": "Entity Type",
+    "Transformer_Function": "Transformer Function",
+    "Load_Transformer_Template": "Load transformer template"
   }
 }

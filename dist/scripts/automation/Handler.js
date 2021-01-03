@@ -9,6 +9,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 export class Handler {
     constructor() {
+        /**
+         * This is a list of triggers that the Action Handler listens for
+         * It doesn't correspond 1:1 with the name of the hooks because the Handler repackages hooks to better suit these triggers
+         * Sometimes various hooks trigger the same Trigger, or there might not be an exact hook that accomplishes what needs to happen.
+         *
+         * When updating this list, ALSO update the DEFAULTS for the Transformers DB
+         */
+        this.Triggers = ["TraitRoll", "ShowChatCard", "ItemAction"];
         this.registerSettings();
         this.startListeners();
     }
@@ -61,9 +69,9 @@ export class Handler {
     
         */
         game.settings.registerMenu("swade-toolkit", "handler-menu", {
-            name: game.i18n.localize("SWADE_Handlers.Automation"),
-            label: game.i18n.localize("SWADE_Handlers.Transformers_Button"),
-            hint: game.i18n.localize("SWADE_Handlers.Transformers_Hint"),
+            name: game.i18n.localize("Automation.Automation"),
+            label: game.i18n.localize("Automation.Transformers_Button"),
+            hint: game.i18n.localize("Automation.Transformers_Hint"),
             type: TransformerSettings,
             restricted: false,
         });
@@ -97,7 +105,7 @@ export class Handler {
     registerTransformer(triggerName, transformerObj) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!Handler.Triggers.includes(triggerName)) {
+                if (!this.Triggers.includes(triggerName)) {
                     throw new Error(`Trigger ${triggerName} not found in list of triggers.`);
                 }
                 let transformers = game.settings.get("swade-toolkit", "transformers");
@@ -133,7 +141,7 @@ export class Handler {
     removeTransformer(triggerName, transformerName) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                if (!Handler.Triggers.includes(triggerName)) {
+                if (!this.Triggers.includes(triggerName)) {
                     throw new Error(`Trigger ${triggerName} not found in list of triggers.`);
                 }
                 let transformers = game.settings.get("swade-toolkit", "transformers");
@@ -164,14 +172,6 @@ export class Handler {
         return entityTransformers;
     }
 }
-/**
- * This is a list of triggers that the Action Handler listens for
- * It doesn't correspond 1:1 with the name of the hooks because the Handler repackages hooks to better suit these triggers
- * Sometimes various hooks trigger the same Trigger, or there might not be an exact hook that accomplishes what needs to happen.
- *
- * When updating this list, ALSO update the DEFAULTS for the Transformers DB
- */
-Handler.Triggers = ["TraitRoll", "ShowChatCard", "ItemAction"];
 export class TransformerSettings extends FormApplication {
     constructor(obj, opts = {}) {
         super(obj, opts);
@@ -182,7 +182,7 @@ export class TransformerSettings extends FormApplication {
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
             id: "swade-toolkit-transformer-settings",
-            title: game.i18n.localize("SWADE_Handlers.Automation"),
+            title: game.i18n.localize("Automation.Automation"),
             template: 'modules/swade-toolkit/templates/TransformerSettings.hbs'
         });
     }
