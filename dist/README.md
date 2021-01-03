@@ -1,3 +1,6 @@
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/K3K11VCDK)  
+Please consider making a one time or recurring contribution to help continue to fuel module updates. Ko-Fi contributions are one of the positive ways I actually know if what I write is being used and if it's valuable for the community. 
+
 # Changelog
 ### 1.0
 - NPC Randomizer Inital Release

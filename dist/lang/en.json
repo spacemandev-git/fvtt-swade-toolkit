@@ -22,6 +22,15 @@
   "SWADE_Handlers": {
     "Automation": "Automation",
     "Transformers_Button": "Transformers",
-    "Transformers_Hint": "Enable/Disable any transformers for this handler."
+    "Transformers_Hint": "Enable/Disable any transformers for this handler.",
+    "Info": "Info",
+    "Disable": "Disable",
+    "Enable": "Enable",
+    "Delete": "Delete",
+    "Description": "Description",
+    "Trigger": "Trigger",
+    "Function": "Function",
+    "Execute_Order": "Execute Order",
+    "Close":"Close"
   }
 }

@@ -1,0 +1,13 @@
+#tokenTransformersButton{
+  position:fixed;
+  left: 800px;
+  bottom: 10px;
+  width: 40px;
+  height: 50px;
+  color: #CCC;
+}
+
+#transformerInfo{
+  width: 500px;
+  height: 300px;
+}

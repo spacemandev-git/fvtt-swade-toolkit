@@ -1,0 +1,36 @@
+<style>
+.description-container{
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+.description-container .div{
+  padding:5px;
+}
+
+</style>
+<div>
+  <h1>{{this.transformer.name}}</h1>
+  <div class="description-container">
+    <div style="display:flex">
+      <p style="flex:1">{{localize "SWADE_Handlers.Description"}}:</p>
+      <p style="flex:1"></p>
+      <p style="flex:6">{{this.transformer.description}}</p>
+    </div>
+    <div style="display:flex">
+      <p style="flex:1">{{localize "SWADE_Handlers.Trigger"}}</p>
+      <p style="flex:1"></p>
+      <p style="flex:6">{{this.trigger}}</p>
+    </div>
+    <div style="display:flex">
+      <p style="flex:1">{{localize "SWADE_Handlers.Execute_Order"}}</p>
+      <p style="flex:1"></p>
+      <p style="flex:6">{{this.transformer.execOrderNum}}</p>
+    </div>
+    <div style="display:flex">
+      <p style="flex:1">{{localize "SWADE_Handlers.Function"}}</p>
+      <p style="flex:1"></p>
+      <textarea style="flex:6">{{this.transformer.transform}}</textarea>
+    </div>
+  </div>
+</div>

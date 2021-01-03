@@ -1,7 +1,7 @@
 {
   "name": "swade-toolkit",
   "title": "SWADE Toolkit",
-  "description": "A collection of useful small improvements for SWADE System",
+  "description": "<p>A collection of macros and automation API for the SWADE system. If you find this module useful, please consider contributing to the maintenance fund at <a href='ko-fi.com/spacemandev'>ko-fi.com/spacemandev</a> </p>",
   "author": [{
     "name": "spacemandev",
     "discord": "spacemandev#6256"
@@ -26,7 +26,8 @@
   "media": [],
   "esmodules": [
     "scripts/macros.js",
-    "scripts/automation.js"
+    "scripts/automation.js",
+    "scripts/UI.js"
   ],
   "styles": [
     "styles/swade-toolkit.css"

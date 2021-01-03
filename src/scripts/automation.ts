@@ -1,12 +1,16 @@
-import {Handler} from './handlers/Handler.js'
+import {Handler} from './automation/Handler.js'
+import {TransformerLibrary} from './automation/TransformerLibrary.js'
 Hooks.on("ready", () => {
+  //Register Automation Handler
   game.automation = new Handler();
+  game.automation.library = new TransformerLibrary(); 
 
   Hooks.call("swade-toolkit-handler-ready")
+  //Load DefaultTransformers for every Actor
 })
 
 /* Test Script Area */
-import {ITransformer} from './handlers/Handler.js'
+import {ITransformer} from './automation/Handler.js'
 Hooks.on("swade-toolkit-handlers-ready", ()=>{
   //return; //Uncomment for packaging for production
 
@@ -15,6 +19,7 @@ Hooks.on("swade-toolkit-handlers-ready", ()=>{
   let reloadTransformer: ITransformer = {
     name: `reload-transformer-${game.actors.entities[0].id}`,
     isActive: true,
+    description: "Test transformer",
     entityID: game.actors.entities[0].id,
     entityType: "Actor",
     execOrderNum: 1,
