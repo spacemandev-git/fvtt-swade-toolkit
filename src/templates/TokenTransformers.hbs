@@ -39,17 +39,31 @@
     <i id="addTransformerButton" class="fas fa-plus"></i>
   </div>
   <div class="transformerList">
-    {{#each triggers}}
+    {{#each actor}}
+      {{#each this}}
+      <div class="transformerRow" id="{{@../key}}-{{this.name}}-row">
+        <span style="flex:7"><i class="fas fa-user"></i> {{@../key}}: {{this.name}}</span>
+        <i style="flex:1" class="fa fa-question" title="{{localize 'Automation.Info'}}" id="actor-info-{{@../key}}-{{this.name}}"></i>
+        {{#if this.isActive}}
+        <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'Automation.Disable'}}" id="actor-active-{{@../key}}-{{this.name}}"></i>
+        {{else}}
+        <i style="flex:1;color:#CCC" class="fa fa-power-off" title="{{localize 'Automation.Enable'}}" id="actor-active-{{@../key}}-{{this.name}}"></i>
+        {{/if}}
+        <i style="flex:1" class="fa fa-trash" title="{{localize 'Automation.Delete'}}" id="actor-delete-{{@../key}}-{{this.name}}"></i>
+      </div>
+      {{/each}}
+    {{/each}}
+    {{#each token}}
       {{#each this}}
       <div class="transformerRow" id="{{@../key}}-{{this.name}}-row">
         <span style="flex:7">{{@../key}}: {{this.name}}</span>
-        <i style="flex:1" class="fa fa-question" title="{{localize 'Automation.Info'}}" id="info-{{@../key}}-{{this.name}}"></i>
+        <i style="flex:1" class="fa fa-question" title="{{localize 'Automation.Info'}}" id="token-info-{{@../key}}-{{this.name}}"></i>
         {{#if this.isActive}}
-        <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'Automation.Disable'}}" id="active-{{@../key}}-{{this.name}}"></i>
+        <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'Automation.Disable'}}" id="token-active-{{@../key}}-{{this.name}}"></i>
         {{else}}
-        <i style="flex:1;color:#CCC" class="fa fa-power-off" title="{{localize 'Automation.Enable'}}" id="active-{{@../key}}-{{this.name}}"></i>
+        <i style="flex:1;color:#CCC" class="fa fa-power-off" title="{{localize 'Automation.Enable'}}" id="token-active-{{@../key}}-{{this.name}}"></i>
         {{/if}}
-        <i style="flex:1" class="fa fa-trash" title="{{localize 'Automation.Delete'}}" id="delete-{{@../key}}-{{this.name}}"></i>
+        <i style="flex:1" class="fa fa-trash" title="{{localize 'Automation.Delete'}}" id="token-delete-{{@../key}}-{{this.name}}"></i>
       </div>
       {{/each}}
     {{/each}}

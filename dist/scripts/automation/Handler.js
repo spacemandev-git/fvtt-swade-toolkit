@@ -50,6 +50,18 @@ export class Handler {
         Hooks.on("swadeChatCardAction", (actor, item, actionID, roll) => __awaiter(this, void 0, void 0, function* () {
             let transformers = game.settings.get("swade-toolkit", "transformers").ItemAction;
             for (let transformer of transformers) {
+                if (!actor.owner) {
+                    //Only process the hook on the machine that the owns the Actor
+                    continue;
+                }
+                if (transformer.entityType != "Actor") {
+                    //For token actions see separate handler
+                    continue;
+                }
+                if (transformer.entityID != actor.id && transformer.entityID != '*') {
+                    //If the actor doesn't match the transformer's target, don't worry about it
+                    continue;
+                }
                 let transformFunction = eval(transformer.transformer);
                 let transformedResult = yield transformFunction(actor, item, actionID, roll);
                 actor = transformedResult.actor;
@@ -94,6 +106,9 @@ export class Handler {
                 console.log("SWADE Toolkit | Transformers Updated", value);
             }
         });
+    }
+    get transformers() {
+        return game.settings.get("swade-toolkit", "transformers");
     }
     /**
      *
@@ -163,7 +178,7 @@ export class Handler {
      * Returns a version of the transformers object, with only the transformers that are apply to the passed entity ID
      * @param entityID The ID of the entity you want to fetch the transformers for
      */
-    getTransformerByEntityId(entityID) {
+    getTransformersByEntityId(entityID) {
         let transformers = game.settings.get("swade-toolkit", "transformers");
         let entityTransformers = {};
         for (let triggerName of Object.keys(transformers)) {

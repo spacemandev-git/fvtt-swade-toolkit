@@ -1,3 +1,5 @@
+import { transform } from "typescript";
+
 export class Handler{
   /**
    * This is a list of triggers that the Action Handler listens for
@@ -38,9 +40,25 @@ export class Handler{
     })
 
     //SwadeActor, SwadeItem, ActionID, Roll Object
-    Hooks.on("swadeChatCardAction", async (actor: any, item:any, actionID: string, roll:Roll) => {
+    Hooks.on("swadeChatCardAction", async (actor: Actor, item:any, actionID: string, roll:Roll) => {
       let transformers = game.settings.get("swade-toolkit", "transformers").ItemAction
       for(let transformer of transformers){
+        if(!actor.owner){
+          //Only process the hook on the machine that the owns the Actor
+          continue;
+        }
+        
+        if(transformer.entityType != "Actor"){
+          //For token actions see separate handler
+          continue;
+        }
+
+        if(transformer.entityID != actor.id && transformer.entityID != '*'){
+          //If the actor doesn't match the transformer's target, don't worry about it
+          continue;
+        }
+
+
         let transformFunction = eval(transformer.transformer);
         let transformedResult = await transformFunction(actor, item, actionID, roll)
         actor = transformedResult.actor
@@ -88,6 +106,10 @@ export class Handler{
         console.log("SWADE Toolkit | Transformers Updated", value)
       }
     })
+  }
+
+  public get transformers(){
+    return game.settings.get("swade-toolkit", "transformers")
   }
 
   /**
@@ -151,7 +173,7 @@ export class Handler{
    * Returns a version of the transformers object, with only the transformers that are apply to the passed entity ID
    * @param entityID The ID of the entity you want to fetch the transformers for
    */
-  public getTransformerByEntityId(entityID: string){
+  public getTransformersByEntityId(entityID: string){
     let transformers = game.settings.get("swade-toolkit", "transformers")
     let entityTransformers = {}
     for(let triggerName of Object.keys(transformers)){
@@ -184,7 +206,7 @@ export class TransformerSettings extends FormApplication{
 export interface ITransformer {
   name: string,
   isActive: boolean,
-  entityID: string,
+  entityID: string | "*",
   entityType: "Token" | "Actor" | "Scene" | "JournalEntry" | "RollTable",
   duration: number, //in seconds
   trigger: string,

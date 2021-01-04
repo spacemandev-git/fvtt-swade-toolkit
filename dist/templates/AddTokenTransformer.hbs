@@ -1,74 +1,80 @@
 <style>
-  div{
+  .add-token-transformer div{
     padding:5px;
   }
 
-  .info-row{
+  .add-token-transformer .info-row{
     display:flex
   }
 
-  .info-row .title{
+  .add-token-transformer .info-row .title{
     flex:3
   }
 
-  .info-row .value{
+  .add-token-transformer .info-row .value{
     flex: 2
   }
 </style>
-<div style="display:flex;">
-  <h1 style="flex:5">{{localize "Automation.Add_Transformers"}}</h1>
-  <span style="flex:1"></span>
-  <select id="templateName" style="flex:2;">
-    {{#each templates}}
-      <option value={{this.name}}>{{this.name}}</option>
-    {{/each}}
-  </select>
-  <span style="flex:1"></span>
-  <i id="loadTemplate" style="flex:1;" class="fas fa-arrow-circle-down fa-2x" title={{localize "Automation.Load_Transformer_Template"}}></i>
-</div>
-<div style="display:flex; flex-direction:column">
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Transformer_Name"}}</p>
-    <input id="transformer-name" class="value" type="text" />
-  </div>
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Trigger"}}</p>
-    <select id="trigger" class="value">
-      {{#each triggers}}
-        {{#if (eq currentSelection.trigger this)}}
-          <option selected="selected" value={{this}}>{{this}}</option>
-        {{else}}
-          <option value={{this}}>{{this}}</option>
-        {{/if}}
+<div class="add-token-transformer">
+  <div style="display:flex;">
+    <h1 style="flex:5">{{localize "Automation.Add_Transformer"}}</h1>
+    <span style="flex:1"></span>
+    <select id="templateName" style="flex:2;">
+      {{#each templates}}
+        <option value={{this.name}}>{{this.name}}</option>
       {{/each}}
     </select>
+    <span style="flex:1"></span>
+    <i id="loadTemplate" style="flex:1;" class="fas fa-arrow-circle-down fa-2x" title={{localize "Automation.Load_Transformer_Template"}}></i>
   </div>
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Enable"}}</p>
-    <input id="isActive" style="flex:1" type="checkbox" checked/>
+  <div style="display:flex; flex-direction:column">
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Transformer_Name"}}</p>
+      <input id="transformer-name" class="value" type="text" />
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Trigger"}}</p>
+      <select id="trigger" class="value">
+        {{#each triggers}}
+          {{#if (eq currentSelection.trigger this)}}
+            <option selected="selected" value={{this}}>{{this}}</option>
+          {{else}}
+            <option value={{this}}>{{this}}</option>
+          {{/if}}
+        {{/each}}
+      </select>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Enable"}}</p>
+      <input id="isActive" style="flex:1" type="checkbox" checked/>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Entity_ID"}}</p>
+      <input id="entityID" class="value" type="text" value={{currentSelection.entityID}} />
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Entity_Type"}}</p>
+      <input id="entityType" class="value" type="text" value={{currentSelection.entityType}} />
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Duration"}}</p>
+      <input id="duration" class="value" type="text" value={{currentSelection.duration}} />
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Execute_Order"}}</p>
+      <input id="execOrderNum" class="value" type="number" value={{currentSelection.execOrderNum}} />
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Description"}}</p>
+      <textarea id="description" class="value" value={{currentSelection.description}}></textarea>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Transformer_Function"}}</p>
+      <textarea id="transformer-function" class="value" value={{currentSelection.transformer}}></textarea>
+    </div>
   </div>
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Entity_ID"}}</p>
-    <input id="entityID" class="value" type="text" value={{currentSelection.entityID}} />
-  </div>
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Entity_Type"}}</p>
-    <input id="entityType" class="value" type="text" value={{currentSelection.entityType}} />
-  </div>
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Duration"}}</p>
-    <input id="duration" class="value" type="text" value={{currentSelection.duration}} />
-  </div>
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Execute_Order"}}</p>
-    <input id="execOrderNum" class="value" type="number" value={{currentSelection.execOrderNum}} />
-  </div>
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Description"}}</p>
-    <textarea id="description" class="value" value={{currentSelection.description}}></textarea>
-  </div>
-  <div class="info-row">
-    <p class="title">{{localize "Automation.Transformer_Function"}}</p>
-    <textarea id="transformer-function" class="value" value={{currentSelection.transformer}}></textarea>
+  <div style="display:flex">
+    <button id="registerTokenTransformerButton">{{localize "Automation.Add_Transformer_To_Token"}}</button>
+    <button id="registerActorTransformerButton">{{localize "Automation.Add_Transformer_To_Actor"}}</button>
   </div>
 </div>

@@ -22,46 +22,82 @@ Hooks.on("controlToken", (token, controlled) => {
                 document.getElementById('tokenTransformerMenu').remove();
             }
             else if (!document.getElementById("tokenTransformerMenu")) {
-                let entityTransformers = game.automation.getTransformerByEntityId(token.id);
-                let tMenu = $(yield renderTemplate('modules/swade-toolkit/templates/TokenTransformers.hbs', { triggers: entityTransformers }));
+                let tokenTransformers = game.automation.getTransformersByEntityId(token.id);
+                let actorTransformers = game.automation.getTransformersByEntityId(token.actor.id);
+                let tMenu = $(yield renderTemplate('modules/swade-toolkit/templates/TokenTransformers.hbs', { token: tokenTransformers, actor: actorTransformers }));
                 transformersButton.append(tMenu);
                 //Listeners for each of the buttons
                 tMenu.find("#addTransformerButton").on("click", (evt) => {
-                    console.log("Add Transformer Button Clicked");
                     new AddTransformerUI({
                         entityID: token.id,
                         entityType: "Token"
                     }).render(true);
                 });
-                for (let trigger of Object.keys(entityTransformers)) {
-                    for (let transformer of entityTransformers[trigger]) {
+                //HTML Triggers for the Buttons on the Actor Transformers
+                for (let trigger of Object.keys(actorTransformers)) {
+                    for (let transformer of actorTransformers[trigger]) {
                         //Info Button
-                        $(document.getElementById(`info-${trigger}-${transformer.name}`)).on("click", (evt) => __awaiter(void 0, void 0, void 0, function* () {
+                        $(document.getElementById(`actor-info-${trigger}-${transformer.name}`)).on("click", (evt) => __awaiter(void 0, void 0, void 0, function* () {
                             new Dialog({
                                 title: transformer.name,
-                                content: yield renderTemplate('modules/swade-toolkit/templates/TransformerInfo.hbs', { trigger: trigger, transformer: transformer }),
+                                content: yield renderTemplate('modules/swade-toolkit/templates/TransformerInfo.hbs', transformer),
                                 buttons: {
                                     ok: {
                                         label: game.i18n.localize("Automation.Close")
                                     }
                                 }
-                            }).render(true);
+                            }, { width: 500 }).render(true);
                         }));
                         //Enable/Disable Button
-                        $(document.getElementById(`active-${trigger}-${transformer.name}`)).on("click", (evt) => {
+                        $(document.getElementById(`actor-active-${trigger}-${transformer.name}`)).on("click", (evt) => {
                             if (transformer.isActive) {
                                 transformer.isActive = false;
                                 game.automation.updateTransformer(trigger, transformer);
-                                document.getElementById(`active-${trigger}-${transformer.name}`).style.color = "#CCC";
+                                document.getElementById(`actor-active-${trigger}-${transformer.name}`).style.color = "#CCC";
                             }
                             else {
                                 transformer.isActive = true;
                                 game.automation.updateTransformer(trigger, transformer);
-                                document.getElementById(`active-${trigger}-${transformer.name}`).style.color = "lime";
+                                document.getElementById(`actor-active-${trigger}-${transformer.name}`).style.color = "lime";
                             }
                         });
                         //Delete Button
-                        $(document.getElementById(`delete-${trigger}-${transformer.name}`)).on("click", (evt) => {
+                        $(document.getElementById(`actor-delete-${trigger}-${transformer.name}`)).on("click", (evt) => {
+                            game.automation.removeTransformer(trigger, transformer.name);
+                            document.getElementById(`${trigger}-${transformer.name}-row`).remove();
+                        });
+                    }
+                }
+                //HTML Triggers for the Buttons on the Token Transformers
+                for (let trigger of Object.keys(tokenTransformers)) {
+                    for (let transformer of tokenTransformers[trigger]) {
+                        //Info Button
+                        $(document.getElementById(`token-info-${trigger}-${transformer.name}`)).on("click", (evt) => __awaiter(void 0, void 0, void 0, function* () {
+                            new Dialog({
+                                title: transformer.name,
+                                content: yield renderTemplate('modules/swade-toolkit/templates/TransformerInfo.hbs', transformer),
+                                buttons: {
+                                    ok: {
+                                        label: game.i18n.localize("Automation.Close")
+                                    }
+                                }
+                            }, { width: 400 }).render(true);
+                        }));
+                        //Enable/Disable Button
+                        $(document.getElementById(`token-active-${trigger}-${transformer.name}`)).on("click", (evt) => {
+                            if (transformer.isActive) {
+                                transformer.isActive = false;
+                                game.automation.updateTransformer(trigger, transformer);
+                                document.getElementById(`token-active-${trigger}-${transformer.name}`).style.color = "#CCC";
+                            }
+                            else {
+                                transformer.isActive = true;
+                                game.automation.updateTransformer(trigger, transformer);
+                                document.getElementById(`token-active-${trigger}-${transformer.name}`).style.color = "lime";
+                            }
+                        });
+                        //Delete Button
+                        $(document.getElementById(`token-delete-${trigger}-${transformer.name}`)).on("click", (evt) => {
                             game.automation.removeTransformer(trigger, transformer.name);
                             document.getElementById(`${trigger}-${transformer.name}-row`).remove();
                         });
@@ -90,8 +126,7 @@ export class AddTransformerUI extends FormApplication {
     }
     getData() {
         return {
-            //templates: game.automation.library.templates,
-            templates: [{ name: "Test Template 1" }, { name: "Test Template 2" }, { name: "blah useasdfasdf asdfasdfl eon" }],
+            templates: game.automation.library.templates,
             triggers: game.automation.Triggers,
             currentSelection: this._selection,
         };
@@ -105,5 +140,58 @@ export class AddTransformerUI extends FormApplication {
             width: 700
         });
     }
-    activateListeners(html) { }
+    activateListeners(html) {
+        html.find("#loadTemplate").on("click", (evt) => {
+            //Load Template from Library
+            let templateName = html.find("#templateName").val();
+            let transformer = game.automation.library.templates.find(el => el.name == templateName);
+            transformer.entityID = html.find("#entityID").val().toString();
+            transformer.entityType = html.find("#entityType").val.toString();
+            this._selection = transformer;
+            //Render True
+            this.render(true);
+        });
+        html.find("#registerTokenTransformerButton").on("click", (evt) => __awaiter(this, void 0, void 0, function* () {
+            //take ID fields and build a transformer
+            //change name to name-entityID when creating the transformer
+            let transformer = {
+                name: html.find("#transformer-name").val().toString() + "-" + html.find("#entityID").val().toString(),
+                isActive: html.find("#isActive").is(":checked"),
+                entityID: html.find("#entityID").val().toString(),
+                entityType: "Token",
+                duration: parseInt(html.find("#duration").val().toString()),
+                trigger: html.find("#trigger").val().toString(),
+                execOrderNum: parseInt(html.find("#execOrderNum").val().toString()),
+                description: html.find("#description").val().toString(),
+                transformer: html.find("#transformer-function").val().toString()
+            };
+            game.automation.registerTransformer(transformer.trigger, transformer);
+            //UI Notifications that it was added
+            let actorName = canvas.tokens.placeables.find(el => { var _a; return el.id == ((_a = html.find("#entityID")) === null || _a === void 0 ? void 0 : _a.val().toString()); }).actor.name;
+            ui.notifications.info(`Transformer (${transformer.name}) added to Token (${actorName ? actorName : "*"})`);
+            //Refresh Transformer Menu
+            document.getElementById('tokenTransformerMenu').remove();
+        }));
+        html.find("#registerActorTransformerButton").on("click", (evt) => __awaiter(this, void 0, void 0, function* () {
+            //take ID fields and build a transformer
+            //change name to name-entityID when creating the transformer
+            let entityID = html.find("#entityID").val().toString() == "*" ? "*" : canvas.tokens.placeables.find(el => el.id == html.find("#entityID").val().toString()).actor.id;
+            let transformer = {
+                name: html.find("#transformer-name").val().toString() + "-" + html.find("#entityID").val().toString(),
+                isActive: html.find("#isActive").is(":checked"),
+                entityID: entityID,
+                entityType: "Actor",
+                duration: parseInt(html.find("#duration").val().toString()),
+                trigger: html.find("#trigger").val().toString(),
+                execOrderNum: parseInt(html.find("#execOrderNum").val().toString()),
+                description: html.find("#description").val().toString(),
+                transformer: html.find("#transformer-function").val().toString()
+            };
+            game.automation.registerTransformer(transformer.trigger, transformer);
+            //UI Notifications that it was added
+            ui.notifications.info(`Transformer (${transformer.name}) added to Actor (${canvas.tokens.placeables.find(el => el.id == html.find("#entityID").val().toString()).actor.name})`);
+            //Refresh Transformer Menu
+            document.getElementById('tokenTransformerMenu').remove();
+        }));
+    }
 }
