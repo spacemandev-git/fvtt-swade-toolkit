@@ -40,5 +40,8 @@
     "Entity_Type": "Entity Type",
     "Transformer_Function": "Transformer Function",
     "Load_Transformer_Template": "Load transformer template"
+  },
+  "SWADE_Actions": {
+    "Actions": "Actions"
   }
 }

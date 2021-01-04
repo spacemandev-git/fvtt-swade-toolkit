@@ -26,8 +26,9 @@
   "media": [],
   "esmodules": [
     "scripts/macros.js",
-    "scripts/automation.js",
-    "scripts/transformerUI.js"
+    "scripts/automation/automation.js",
+    "scripts/automation/transformerUI.js",
+    "scripts/actions/tokenactions.js"
   ],
   "styles": [
     "styles/swade-toolkit.css"

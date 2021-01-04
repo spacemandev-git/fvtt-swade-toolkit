@@ -60,7 +60,7 @@ export class Handler {
             //it's a function so it can be reused with the token actions as well
             const getFlavor = (actor, item, actionID, roll) => {
                 let flavor = '';
-                if (actionID == "formula") {
+                if (actionID == "formula") { //skill
                     let skillItem = actor.items.find(el => el.name == item.data.data.actions.skill);
                     if (skillItem) {
                         let coreSkillFormula = skillItem.data.data.die.modifier != "" ? `${skillItem.data.data.die.sides} ${skillItem.data.data.die.modifier}` : skillItem.data.data.die.sides;
@@ -71,14 +71,8 @@ export class Handler {
                     }
                 }
                 else if (actionID == "damage") {
-                    let ap = getProperty(item.data, 'data.ap');
-                    if (ap) {
-                        ap = ` (${game.i18n.localize('SWADE.Ap')} ${ap})`;
-                    }
-                    else {
-                        ap = ` (${game.i18n.localize('SWADE.Ap')} 0)`;
-                    }
-                    flavor = `${item.name} (${item.data.data.damage}) ${game.i18n.localize("SWADE.Dmg")} ${ap}`;
+                    let ap = getProperty(item.data, 'data.ap') ? `(${game.i18n.localize('SWADE.Ap')} ${getProperty(item.data, 'data.ap')})` : `(${game.i18n.localize('SWADE.Ap')} 0)`;
+                    flavor = `${item.name} ${game.i18n.localize("SWADE.Dmg")} (${item.data.data.damage}) ${ap}`;
                 }
                 else {
                     //Find what kind by checking item.actions
@@ -98,13 +92,7 @@ export class Handler {
                         }
                     }
                     else if (action.type == "damage") {
-                        let ap = getProperty(item.data, 'data.ap');
-                        if (ap) {
-                            ap = ` (${game.i18n.localize('SWADE.Ap')} ${ap})`;
-                        }
-                        else {
-                            ap = ` (${game.i18n.localize('SWADE.Ap')} 0)`;
-                        }
+                        let ap = getProperty(item.data, 'data.ap') ? `(${game.i18n.localize('SWADE.Ap')} ${getProperty(item.data, 'data.ap')})` : `(${game.i18n.localize('SWADE.Ap')} 0)`;
                         //need to check override
                         if (action.dmgOverride != "") {
                             flavor = `${item.name} (${action.dmgOverride}${action.dmgMod}) ${game.i18n.localize("SWADE.Dmg")} ${ap}`;
@@ -170,6 +158,13 @@ export class Handler {
             type: TransformerSettings,
             restricted: false,
         });
+        const getDefaultObject = () => {
+            let obj = {};
+            this.Triggers.forEach(t => {
+                obj[t] = [];
+            });
+            return obj;
+        };
         /**
          * This is globally accessible storage for the list of transformer objects registered to this handler
          * They are organized by *trigger_name* which is often a *hook_name*, but in certain instances, might be different than the hook when the handler had to repackage it for whatever reason.
@@ -179,12 +174,7 @@ export class Handler {
             scope: "world",
             config: false,
             type: Object,
-            default: {
-                //SHOULD MIRROR WHATEVER ACTIONHANDLERS.ACTIONTRIGGERS list
-                "TraitRoll": [],
-                "ShowChatCard": [],
-                "ItemAction": []
-            },
+            default: getDefaultObject(),
             onChange: (value) => {
                 console.log("SWADE Toolkit | Transformers Updated", value);
             }

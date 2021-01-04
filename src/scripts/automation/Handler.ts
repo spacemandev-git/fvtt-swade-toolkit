@@ -1,5 +1,3 @@
-import { transform } from "typescript";
-
 export class Handler{
   /**
    * This is a list of triggers that the Action Handler listens for

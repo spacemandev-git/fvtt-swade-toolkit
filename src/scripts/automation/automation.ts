@@ -1,5 +1,5 @@
-import {Handler, ITransformer} from './automation/Handler.js'
-import {TransformerLibrary} from './automation/TransformerLibrary.js'
+import {Handler } from './Handler.js'
+import {TransformerLibrary} from './TransformerLibrary.js'
 Hooks.on("ready", () => {
   //Register Automation Handler
   game.automation = new Handler();

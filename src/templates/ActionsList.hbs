@@ -1,0 +1,13 @@
+<div class="swade-toolkit-actionslist">
+  <div class="actions-grid">
+  {{#each this}}
+    <div  class="swade-action"
+          title="{{this.name}}"
+          data-item-id="{{this.itemID}}"
+          data-action-id="{{this.actionID}}"
+          style="background-image: url('{{this.img}}');"
+    >      
+    </div>
+  {{/each}}
+  </div>
+</div>

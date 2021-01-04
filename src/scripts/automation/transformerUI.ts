@@ -1,6 +1,6 @@
 // Add/remove transformers from token/scene
 
-import { ITransformer } from "./automation/Handler";
+import { ITransformer } from "./Handler.js";
 
 // Add/remove keywords from scene
 Hooks.on("controlToken", (token:Token, controlled:boolean) => {
@@ -204,4 +204,3 @@ export class AddTransformerUI extends FormApplication {
     })
   }
 }
-
