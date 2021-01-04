@@ -24,8 +24,10 @@ export class Handler{
   private startListeners(){
     //SwadeActor, SwadeItem, ActionID, Roll Object
     Hooks.on("swadeChatCardAction", async (actor: Actor, item:Item, actionID: string, roll:Roll) => {
-      if(!actor.owner){
+      console.log(actor, item, actionID, roll);
+      if(!actor.owner || !roll){
         //Only process the hook on the machine that the owns the Actor
+        //don't process if roll is null (user canceled action)
         return;
       }
 
@@ -36,7 +38,11 @@ export class Handler{
         }         
         return false;
       })
-      
+
+      //We're going to abuse the roll object here a little bit by stuffing a "modifiers" list in there
+      //Ideally every transformer will append this list to include the modifiers they added and the description of them
+      roll['modifiers'] = [];
+
       let transformers = this.getTransformersByEntityId("Actor", actor.id)['ItemAction']
       for(let transformer of transformers){
         let transformFunction = eval(transformer.transformer);
@@ -47,10 +53,60 @@ export class Handler{
         roll = transformedResult.roll
       }
 
+      //it's a function so it can be reused with the token actions as well
+      const getFlavor = (actor:Actor, item:Item, actionID:string, roll:Roll) => {
+        let flavor = ''
+        if(actionID == "formula"){ //skill
+          let skillItem = actor.items.find(el => el.name == item.data.data.actions.skill)
+          if(skillItem){
+            let coreSkillFormula = skillItem.data.data.die.modifier != "" ? `${skillItem.data.data.die.sides} ${skillItem.data.data.die.modifier}` : skillItem.data.data.die.sides
+            flavor = `${item.data.data.actions.skill} (${coreSkillFormula}) ${game.i18n.localize('SWADE.SkillTest')}`
+          } else {
+            flavor = `${game.i18n.localize("SWADE.Unskilled")} ${game.i18n.localize('SWADE.SkillTest')}`
+          }
+        } else if (actionID == "damage"){
+          let ap = getProperty(item.data, 'data.ap') ? `(${game.i18n.localize('SWADE.Ap')} ${getProperty(item.data, 'data.ap')})` : `(${game.i18n.localize('SWADE.Ap')} 0)`
+          flavor = `${item.name} ${game.i18n.localize("SWADE.Dmg")} (${item.data.data.damage}) ${ap}`
+        } else {
+          //Find what kind by checking item.actions
+          let action = item.data.data.actions.additional[actionID]
+          if(action.type == "skill"){
+            //need to check override
+            let skill = actor.items.find(el => el.name == item.data.data.actions.skill)
+            if(action.skillOverride != ""){
+              skill = actor.items.find(el => el.name == action.skillOverride)
+            }
+            if(skill){
+              let coreSkillFormula = skill.data.data.die.modifier != "" ? `${skill.data.data.die.sides} ${skill.data.data.die.modifier}` : skill.data.data.die.sides
+              flavor = `${item.data.data.actions.skill} (${coreSkillFormula}) ${game.i18n.localize('SWADE.SkillTest')}`
+            } else {
+              flavor = `${game.i18n.localize("SWADE.Unskilled")} ${game.i18n.localize('SWADE.SkillTest')}`
+            }
+          } else if(action.type == "damage") {
+            let ap = getProperty(item.data, 'data.ap') ? `(${game.i18n.localize('SWADE.Ap')} ${getProperty(item.data, 'data.ap')})` : `(${game.i18n.localize('SWADE.Ap')} 0)`
+            //need to check override
+            if(action.dmgOverride != ""){
+              flavor = `${item.name} (${action.dmgOverride}${action.dmgMod}) ${game.i18n.localize("SWADE.Dmg")} ${ap}`
+            } else {
+              flavor = `${item.name} ${game.i18n.localize("SWADE.Dmg")} (${item.data.data.damage}) ${ap}`
+            } 
+          }
+        }
+        flavor += "<br>"
+        for(let modifier of roll['modifiers']){
+          flavor += `${modifier.description} : ${modifier.value}`
+        }
+        return flavor;
+      }
+
       let actorTokens:Token[] = canvas.tokens.placeables.filter((token:Token) => token.actor.id == actor.id)
       if(actorTokens.length == 0){
         //There are no tokens, print the final roll
-        roll.toMessage();
+        roll.toMessage({
+          speaker: ChatMessage.getSpeaker({actor:actor}),
+          flavor: getFlavor(actor, item, actionID, roll),
+          roll:roll
+        });
         return;
       } 
       // After Actor Transformers are done pass to Token Transformers
@@ -72,7 +128,11 @@ export class Handler{
         }
       }
       // Else if print when token actions are done
-      roll.toMessage();
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({actor:actor}),
+        flavor: getFlavor(actor,item,actionID, roll),
+        roll:roll
+      });
     })
   }
 
@@ -92,6 +152,13 @@ export class Handler{
       restricted: false,
     });
 
+    const getDefaultObject = () => {
+      let obj = {}
+      this.Triggers.forEach(t => {
+        obj[t] = []
+      })
+      return obj;
+    }
     /**
      * This is globally accessible storage for the list of transformer objects registered to this handler
      * They are organized by *trigger_name* which is often a *hook_name*, but in certain instances, might be different than the hook when the handler had to repackage it for whatever reason.
@@ -101,12 +168,7 @@ export class Handler{
       scope: "world",
       config: false,
       type: Object,
-      default: {
-        //SHOULD MIRROR WHATEVER ACTIONHANDLERS.ACTIONTRIGGERS list
-        "TraitRoll": [],
-        "ShowChatCard": [],
-        "ItemAction": []
-      },
+      default: getDefaultObject(),
       onChange: (value: any) => {
         console.log("SWADE Toolkit | Transformers Updated", value)
       }
