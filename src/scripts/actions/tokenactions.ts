@@ -10,6 +10,15 @@ Hooks.on("renderTokenHUD", async (tokenHUD:TokenHUD, html:any, opts:any) => {
   html.find(".right").append(actionsButton);
 
   //make the thingies drag droppable
+  //@ts-ignore
+  const dragDrop = new DragDrop({
+    dragSelector: ".swade-action",
+    dropSelector: "#board",
+    permissions: { dragstart: this._canDragStart.bind(this), drop: this._canDragDrop.bind(this) },
+    callbacks: { dragstart: this._onDragStart.bind(this), drop: this._onDragDrop.bind(this) }
+  });
+  //@ts-ignore
+  dragDrop.bind(html);
 })  
 
 function getActionsList(actorItems:Item[]){
