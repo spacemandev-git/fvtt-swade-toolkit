@@ -7,7 +7,24 @@ Hooks.on("ready", () => {
     Hooks.call("swade-toolkit-handler-ready");
     //Load DefaultTransformers for every Actor
 });
-Hooks.on("swade-toolkit-handlers-ready", () => {
-    //return; //Uncomment for packaging for production
-    //Simple handler that removes the # of bullets used by an action as stipulated in the shots
+/**
+ * @param token is of type *any* because it's the token data, not the token itself
+ */
+Hooks.on("deleteToken", (scene, token, obj, userId) => {
+    if (game.userId != userId) {
+        return;
+    } //only process this on the machine that made the token
+    //Delete all the transformers related to this token
+    for (let transformer of game.automation.getTransformersByEntityId('Token', token.id, false)) {
+        game.automation.removeTransformer(transformer.trigger, transformer.name);
+    }
+});
+Hooks.on("deleteToken", (actor, obj, userId) => {
+    if (game.userId != userId) {
+        return;
+    } //only process this on the machine that made the token
+    //Delete all the transformers related to this token
+    for (let transformer of game.automation.getTransformersByEntityId('Actor', actor.id, false)) {
+        game.automation.removeTransformer(transformer.trigger, transformer.name);
+    }
 });

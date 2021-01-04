@@ -14,8 +14,8 @@ Hooks.on("controlToken", (token:Token, controlled:boolean) => {
       if(document.getElementById('tokenTransformerMenu') && evt.target.id == "tokenTransformersButton"){
         document.getElementById('tokenTransformerMenu').remove();
       } else if(!document.getElementById("tokenTransformerMenu")) {
-        let tokenTransformers = game.automation.getTransformersByEntityId(token.id)
-        let actorTransformers = game.automation.getTransformersByEntityId(token.actor.id)
+        let tokenTransformers = game.automation.getTransformersByEntityId("Token", token.id)
+        let actorTransformers = game.automation.getTransformersByEntityId("Actor", token.actor.id)
         let tMenu = $(await renderTemplate('modules/swade-toolkit/templates/TokenTransformers.hbs', {token: tokenTransformers, actor:actorTransformers}))
         transformersButton.append(tMenu);
         //Listeners for each of the buttons
@@ -110,7 +110,7 @@ export class AddTransformerUI extends FormApplication {
     isActive: false,
     entityID: "",
     entityType: "Token",
-    duration: 0, //in seconds
+    duration: -1, //in seconds
     trigger: "ItemAction",
     execOrderNum: 1,
     description: "",

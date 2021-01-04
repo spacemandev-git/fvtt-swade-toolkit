@@ -8,7 +8,7 @@ export class Handler{
    * 
    * When updating this list, ALSO update the DEFAULTS for the Transformers DB
    */
-  Triggers = ["TraitRoll", "ShowChatCard", "ItemAction"]
+  Triggers = ["ItemAction"]
 
   constructor(){
    this.registerSettings();
@@ -22,43 +22,23 @@ export class Handler{
   }
 
   private startListeners(){
-    //SwadeActor, SwadeItem, ChatMessage objects
-    Hooks.on("swadeChatCard", async (actor:any, item:any, chatCard:any) => {
-      let transformers:ITransformer[] = game.settings.get("swade-toolkit", "transformers").ShowChatCard
-      
-      // Transformers will be executed from lowest to highest order
-      transformers = transformers.sort(Handler.execOrderSort)
-
-      for(let transformer of transformers){
-        if(!transformer.isActive){continue;} //ignore disabled transformers
-        let transformFunction = eval(transformer.transformer);
-        let transformedResult = await transformFunction(actor, item, chatCard)
-        actor = transformedResult.actor
-        item = transformedResult.item,
-        chatCard = transformedResult.chatCard
-      }
-    })
-
     //SwadeActor, SwadeItem, ActionID, Roll Object
-    Hooks.on("swadeChatCardAction", async (actor: Actor, item:any, actionID: string, roll:Roll) => {
-      let transformers = game.settings.get("swade-toolkit", "transformers").ItemAction
+    Hooks.on("swadeChatCardAction", async (actor: Actor, item:Item, actionID: string, roll:Roll) => {
+      if(!actor.owner){
+        //Only process the hook on the machine that the owns the Actor
+        return;
+      }
+
+      //suppress the Chat Message that was just created by the user that did the action
+      Hooks.once("createChatMessage", (chatMessage:ChatMessage, opts:any, userId:string) => {
+        if(userId == game.userId){
+          chatMessage.delete();
+        }         
+        return false;
+      })
+      
+      let transformers = this.getTransformersByEntityId("Actor", actor.id)['ItemAction']
       for(let transformer of transformers){
-        if(!actor.owner){
-          //Only process the hook on the machine that the owns the Actor
-          continue;
-        }
-        
-        if(transformer.entityType != "Actor"){
-          //For token actions see separate handler
-          continue;
-        }
-
-        if(transformer.entityID != actor.id && transformer.entityID != '*'){
-          //If the actor doesn't match the transformer's target, don't worry about it
-          continue;
-        }
-
-
         let transformFunction = eval(transformer.transformer);
         let transformedResult = await transformFunction(actor, item, actionID, roll)
         actor = transformedResult.actor
@@ -66,9 +46,34 @@ export class Handler{
         actionID = transformedResult.chatCard,
         roll = transformedResult.roll
       }
-    })
 
-    //TODO: TraitRoll
+      let actorTokens:Token[] = canvas.tokens.placeables.filter((token:Token) => token.actor.id == actor.id)
+      if(actorTokens.length == 0){
+        //There are no tokens, print the final roll
+        roll.toMessage();
+        return;
+      } 
+      // After Actor Transformers are done pass to Token Transformers
+      for(let token of actorTokens){
+        // the "T" versions of these is so each token gets the final result from the actor, not the token before it
+        // otherwise tokens would be chaining the rolls across tokens
+        let tActor = actor;
+        let tItem = item;
+        let tActionID = actionID;
+        let tRoll = roll;
+
+        for(let transformer of this.getTransformersByEntityId("Token", token.id)['ItemAction']){
+          let transformFunction = eval(transformer.transformer);
+          let transformedResult = await transformFunction(tActor, tItem, tActionID, tRoll)
+          tActor = transformedResult.actor
+          tItem = transformedResult.item,
+          tActionID = transformedResult.chatCard,
+          tRoll = transformedResult.roll  
+        }
+      }
+      // Else if print when token actions are done
+      roll.toMessage();
+    })
   }
 
   private registerSettings(){
@@ -171,13 +176,19 @@ export class Handler{
 
   /**
    * Returns a version of the transformers object, with only the transformers that are apply to the passed entity ID
+   * Returns not just the transformers for that entity but also any wild card transformers.
+   * @param entityType The type of the entity to filter for
    * @param entityID The ID of the entity you want to fetch the transformers for
    */
-  public getTransformersByEntityId(entityID: string){
+  public getTransformersByEntityId(entityType:ITransformer['entityType'], entityID: string, includeWC=true){
     let transformers = game.settings.get("swade-toolkit", "transformers")
     let entityTransformers = {}
     for(let triggerName of Object.keys(transformers)){
-      entityTransformers[triggerName] = transformers[triggerName].filter((el:ITransformer) => el.entityID == entityID).sort(Handler.execOrderSort)
+      if(includeWC){
+        entityTransformers[triggerName] = transformers[triggerName].filter((el:ITransformer) => ((el.entityID == entityID || el.entityID == "*") && el.entityType == entityType)).sort(Handler.execOrderSort)
+      } else {
+        entityTransformers[triggerName] = transformers[triggerName].filter((el:ITransformer) => (el.entityID == entityID && el.entityType == entityType)).sort(Handler.execOrderSort)        
+      }
     }
     return entityTransformers;
   }

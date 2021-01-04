@@ -22,8 +22,8 @@ Hooks.on("controlToken", (token, controlled) => {
                 document.getElementById('tokenTransformerMenu').remove();
             }
             else if (!document.getElementById("tokenTransformerMenu")) {
-                let tokenTransformers = game.automation.getTransformersByEntityId(token.id);
-                let actorTransformers = game.automation.getTransformersByEntityId(token.actor.id);
+                let tokenTransformers = game.automation.getTransformersByEntityId("Token", token.id);
+                let actorTransformers = game.automation.getTransformersByEntityId("Actor", token.actor.id);
                 let tMenu = $(yield renderTemplate('modules/swade-toolkit/templates/TokenTransformers.hbs', { token: tokenTransformers, actor: actorTransformers }));
                 transformersButton.append(tMenu);
                 //Listeners for each of the buttons
@@ -46,7 +46,7 @@ Hooks.on("controlToken", (token, controlled) => {
                                         label: game.i18n.localize("Automation.Close")
                                     }
                                 }
-                            }, { width: 500 }).render(true);
+                            }, { width: 600 }).render(true);
                         }));
                         //Enable/Disable Button
                         $(document.getElementById(`actor-active-${trigger}-${transformer.name}`)).on("click", (evt) => {
@@ -81,7 +81,7 @@ Hooks.on("controlToken", (token, controlled) => {
                                         label: game.i18n.localize("Automation.Close")
                                     }
                                 }
-                            }, { width: 400 }).render(true);
+                            }, { width: 600 }).render(true);
                         }));
                         //Enable/Disable Button
                         $(document.getElementById(`token-active-${trigger}-${transformer.name}`)).on("click", (evt) => {
@@ -115,7 +115,7 @@ export class AddTransformerUI extends FormApplication {
             isActive: false,
             entityID: "",
             entityType: "Token",
-            duration: 0,
+            duration: -1,
             trigger: "ItemAction",
             execOrderNum: 1,
             description: "",

@@ -6,3 +6,5 @@
 - Transformers should only be triggered on the machine that owns the token/actor
 - Transformers should only be triggered for the token/actor they are registered for
 - Transformers should fire in execute order
+- Transformers should always be listed in execution order
+- Transformers should be deleted when the relevant token or actor is deleted (but not wildcard transformers!)

@@ -27,7 +27,7 @@
   "esmodules": [
     "scripts/macros.js",
     "scripts/automation.js",
-    "scripts/UI.js"
+    "scripts/transformerUI.js"
   ],
   "styles": [
     "styles/swade-toolkit.css"
