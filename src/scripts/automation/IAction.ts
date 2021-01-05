@@ -18,7 +18,7 @@ export function getSwadeAction(item:Item, actionId:string){
     else{return parseInt(numString)}
   }
 
-  if(actionId == "forumula"){
+  if(actionId == "formula"){
     action = {
       name: "Base Skill Roll",
       type: "skill",
