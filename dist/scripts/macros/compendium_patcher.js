@@ -48,10 +48,20 @@ function compendium_patcher() {
                             packContents.push(yield pack.getContent());
                         }
                         const findItem = (item) => {
-                            for (let pack of packContents) {
-                                let foundItem = pack.find(el => (el.name == item.name && el.type == item.type));
-                                if (foundItem) {
-                                    return foundItem;
+                            if (item.type == "hindrance") {
+                                for (let pack of packContents) {
+                                    let foundItem = pack.find(el => (el.name.includes(item.name) && el.type == item.type));
+                                    if (foundItem) {
+                                        return foundItem;
+                                    }
+                                }
+                            }
+                            else {
+                                for (let pack of packContents) {
+                                    let foundItem = pack.find(el => (el.name == item.name && el.type == item.type));
+                                    if (foundItem) {
+                                        return foundItem;
+                                    }
                                 }
                             }
                             return undefined;
@@ -63,7 +73,7 @@ function compendium_patcher() {
                                     continue;
                                 } //no matching item found in any of the packs
                                 patchedItem = duplicate(patchedItem); //necessary so we aren't passing in the reference
-                                if (item.type == "skill" || item.type == "power") {
+                                if (item.type == "skill" || item.type == "power" || item.type == "hindrance") {
                                     //powers specify an AB and skills have die types associated with them so don't mess with those
                                     item.update({
                                         "data.description": patchedItem.data.description
