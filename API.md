@@ -14,3 +14,4 @@
   {"description": "Cover Bonus", "value": "+4"}
 ]
 ```
+- ItemAction can make use of the "chatMessage" property on the roll object to overwrite the ChatMessage content
