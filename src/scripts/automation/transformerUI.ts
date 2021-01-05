@@ -8,7 +8,7 @@ Hooks.on("controlToken", (token:Token, controlled:boolean) => {
     // Token is being deselected
     document.getElementById("tokenTransformersButton").remove();
   } else {
-    let transformersButton = $(`<i id='tokenTransformersButton' class="control-icon fab fa-buffer fa-3x" title=${game.i18n.localize("Automation.Transformers_Button")}></i>`)
+    let transformersButton = $(`<i id='tokenTransformersButton' class="control-icon fas fa-robot fa-3x" title=${game.i18n.localize("Automation.Transformers_Button")}></i>`)
     transformersButton.appendTo(document.body);
     transformersButton.on('click', async (evt) => {
       if(document.getElementById('tokenTransformerMenu') && evt.target.id == "tokenTransformersButton"){

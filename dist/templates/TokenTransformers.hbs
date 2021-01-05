@@ -32,6 +32,10 @@
   display:flex;
   padding: 5px;
 }
+
+#tokenTransformerMenu .wildcard-test{
+  color: yellow
+}
 </style>
 
 <div id="tokenTransformerMenu">
@@ -42,7 +46,7 @@
     {{#each actor}}
       {{#each this}}
       <div class="transformerRow" id="{{@../key}}-{{this.name}}-row">
-        <span style="flex:7"><i class="fas fa-user"></i> {{@../key}}: {{this.name}}</span>
+        <span style="flex:7" {{#eq this.entityID "*"}}class="wildcard-test"{{/eq}}><i class="fas fa-user"></i> {{@../key}}: {{this.name}}</span>
         <i style="flex:1" class="fa fa-question" title="{{localize 'Automation.Info'}}" id="actor-info-{{@../key}}-{{this.name}}"></i>
         {{#if this.isActive}}
         <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'Automation.Disable'}}" id="actor-active-{{@../key}}-{{this.name}}"></i>
@@ -56,7 +60,7 @@
     {{#each token}}
       {{#each this}}
       <div class="transformerRow" id="{{@../key}}-{{this.name}}-row">
-        <span style="flex:7">{{@../key}}: {{this.name}}</span>
+        <span style="flex:7" {{#eq this.entityID "*"}}class="wildcard-test"{{/eq}}>{{@../key}}: {{this.name}}</span>
         <i style="flex:1" class="fa fa-question" title="{{localize 'Automation.Info'}}" id="token-info-{{@../key}}-{{this.name}}"></i>
         {{#if this.isActive}}
         <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'Automation.Disable'}}" id="token-active-{{@../key}}-{{this.name}}"></i>

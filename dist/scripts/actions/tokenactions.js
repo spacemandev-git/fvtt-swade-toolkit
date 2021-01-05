@@ -56,7 +56,9 @@ function handleActionDrop(evt) {
         console.log("Token:", token);
         //Set the dropped token as target
         //Doesn't do anything, assumes transformers will need this information for their magic
-        token.setTarget(true, game.user, true, false);
+        if (token) {
+            token.setTarget(true, game.user, true, false);
+        }
         //handle the action
         let actor = game.actors.get(data.actorId);
         let item = actor.items.find(el => el.id == data.itemId);

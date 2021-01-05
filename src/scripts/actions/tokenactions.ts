@@ -52,7 +52,9 @@ async function handleActionDrop(evt:DragEvent){
   
   //Set the dropped token as target
   //Doesn't do anything, assumes transformers will need this information for their magic
-  token.setTarget(true, game.user, true, false);
+  if(token){
+    token.setTarget(true, game.user, true, false);
+  }
 
   //handle the action
   let actor = game.actors.get(data.actorId);

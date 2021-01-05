@@ -20,9 +20,9 @@
     "Accept2": "Please just patch my actors."
   },
   "Automation": {
-    "Automation": "Automation",
+    "Automation_Text": "Automation",
     "Transformers_Button": "Rulesets",
-    "Transformers_Hint": "Enable/Disable any automation rulesets.",
+    "Transformers_Hint": "Import/View your rulesets.",
     "Info": "Info",
     "Disable": "Disable",
     "Enable": "Enable",
@@ -39,7 +39,9 @@
     "Entity_ID": "Entity ID",
     "Entity_Type": "Entity Type",
     "Transformer_Function": "Transformer Function",
-    "Load_Transformer_Template": "Load transformer template"
+    "Load_Transformer_Template": "Load transformer template",
+    "Import_Ruleset": "Import JSON ruleset",
+    "View_Rulesets": "View installed rulesets"
   },
   "SWADE_Actions": {
     "Actions": "Actions"

@@ -15,7 +15,7 @@ Hooks.on("controlToken", (token, controlled) => {
         document.getElementById("tokenTransformersButton").remove();
     }
     else {
-        let transformersButton = $(`<i id='tokenTransformersButton' class="control-icon fab fa-buffer fa-3x" title=${game.i18n.localize("Automation.Transformers_Button")}></i>`);
+        let transformersButton = $(`<i id='tokenTransformersButton' class="control-icon fas fa-robot fa-3x" title=${game.i18n.localize("Automation.Transformers_Button")}></i>`);
         transformersButton.appendTo(document.body);
         transformersButton.on('click', (evt) => __awaiter(void 0, void 0, void 0, function* () {
             if (document.getElementById('tokenTransformerMenu') && evt.target.id == "tokenTransformersButton") {

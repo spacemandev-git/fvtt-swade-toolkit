@@ -143,7 +143,7 @@ export class Handler{
 
     */
     game.settings.registerMenu("swade-toolkit", "handler-menu", {
-      name: game.i18n.localize("Automation.Automation"),
+      name: game.i18n.localize("Automation.Automation_Text"),
       label: game.i18n.localize("Automation.Transformers_Button"),
       hint: game.i18n.localize("Automation.Transformers_Hint"),
       type: TransformerSettings,
@@ -266,12 +266,37 @@ export class TransformerSettings extends FormApplication{
   static get defaultOptions(){
     return mergeObject(super.defaultOptions, {
       id: "swade-toolkit-transformer-settings",
-      title: game.i18n.localize("Automation.Automation"),
-      template: 'modules/swade-toolkit/templates/TransformerSettings.hbs'
+      title: game.i18n.localize("Automation.Automation_Text"),
+      template: 'modules/swade-toolkit/templates/TransformerSettings.hbs',
+      width: 400
     })
   }
 
-  async activateListeners(html){}
+  async activateListeners(html:JQuery<HTMLElement>){
+    html.find("#importAutomationRuleset").on("click", async (evt) => {
+      new Dialog({
+        title: game.i18n.localize("Automation.Import_Ruleset"),
+        content: `
+          <input id="importJSONinput" type="file" />
+        `,
+        buttons: {
+          import: {
+            label: game.i18n.localize("SWADE.Ok"),
+            callback: async (html) => {
+              let jsonFile = $(html).find("#importJSONinput")[0]['files'][0];
+              console.log(`SWADE Toolkit | Importing Ruleset ${jsonFile}`);
+              let importRuleset = await (await fetch(jsonFile.path)).json()
+              console.log(importRuleset);
+            }
+          }
+        }
+      }).render(true)
+    })
+
+    html.find("#viewRulesets").on("click", (evt) => {
+      console.log("Hello World!")
+    })
+  }
 }
 
 export interface ITransformer {
