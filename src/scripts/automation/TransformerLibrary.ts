@@ -40,7 +40,7 @@ class TransformerSettings extends FormApplication{
     return mergeObject(super.defaultOptions, {
       id: "swade-toolkit-transformer-settings",
       title: JSON.stringify(game.i18n.localize("Automation.Automation_Text")).replace("\"", ""),
-      template: 'modules/swade-toolkit/templates/TransformerSettings.hbs',
+      template: 'modules/swade-toolkit/templates/automation/TransformerSettings.hbs',
       width: 400
     })
   }

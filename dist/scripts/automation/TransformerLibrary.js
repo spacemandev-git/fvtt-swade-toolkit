@@ -43,7 +43,7 @@ class TransformerSettings extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: "swade-toolkit-transformer-settings",
             title: JSON.stringify(game.i18n.localize("Automation.Automation_Text")).replace("\"", ""),
-            template: 'modules/swade-toolkit/templates/TransformerSettings.hbs',
+            template: 'modules/swade-toolkit/templates/automation/TransformerSettings.hbs',
             width: 400
         });
     }
@@ -87,14 +87,3 @@ export class TransformerLibrary {
         return game.settings.get("swade-toolkit", "templates");
     }
 }
-//should return a list of default transformers
-//Combat
-// Range Penalty
-// Multi Action Penalty
-// Cover Penalty
-// Recoil
-// Unstable Platform
-// Double Tap Edge
-// Target Parry/Toughness
-// Gritty Damage
-// ReRoll w/ Benny

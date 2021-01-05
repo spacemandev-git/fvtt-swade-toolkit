@@ -24,7 +24,7 @@ Hooks.on("controlToken", (token, controlled) => {
             else if (!document.getElementById("tokenTransformerMenu")) {
                 let tokenTransformers = game.automation.getTransformersByEntityId("Token", token.id);
                 let actorTransformers = game.automation.getTransformersByEntityId("Actor", token.actor.id);
-                let tMenu = $(yield renderTemplate('modules/swade-toolkit/templates/TokenTransformers.hbs', { token: tokenTransformers, actor: actorTransformers }));
+                let tMenu = $(yield renderTemplate('modules/swade-toolkit/templates/automation/TokenTransformers.hbs', { token: tokenTransformers, actor: actorTransformers }));
                 transformersButton.append(tMenu);
                 //Listeners for each of the buttons
                 tMenu.find("#addTransformerButton").on("click", (evt) => {
@@ -40,7 +40,7 @@ Hooks.on("controlToken", (token, controlled) => {
                         $(document.getElementById(`actor-info-${trigger}-${transformer.name}`)).on("click", (evt) => __awaiter(void 0, void 0, void 0, function* () {
                             new Dialog({
                                 title: transformer.name,
-                                content: yield renderTemplate('modules/swade-toolkit/templates/TransformerInfo.hbs', transformer),
+                                content: yield renderTemplate('modules/swade-toolkit/templates/automation/TransformerInfo.hbs', transformer),
                                 buttons: {
                                     ok: {
                                         label: game.i18n.localize("Automation.Close")
@@ -75,7 +75,7 @@ Hooks.on("controlToken", (token, controlled) => {
                         $(document.getElementById(`token-info-${trigger}-${transformer.name}`)).on("click", (evt) => __awaiter(void 0, void 0, void 0, function* () {
                             new Dialog({
                                 title: transformer.name,
-                                content: yield renderTemplate('modules/swade-toolkit/templates/TransformerInfo.hbs', transformer),
+                                content: yield renderTemplate('modules/swade-toolkit/templates/automation/TransformerInfo.hbs', transformer),
                                 buttons: {
                                     ok: {
                                         label: game.i18n.localize("Automation.Close")
@@ -135,7 +135,7 @@ export class AddTransformerUI extends FormApplication {
         return mergeObject(super.defaultOptions, {
             id: "addTransformerToTokenDialog",
             name: game.i18n.localize("Automation.Transformers"),
-            template: "modules/swade-toolkit/templates/AddTokenTransformer.hbs",
+            template: "modules/swade-toolkit/templates/automation/AddTokenTransformer.hbs",
             height: 400,
             width: 700
         });

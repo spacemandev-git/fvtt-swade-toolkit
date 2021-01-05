@@ -19,7 +19,7 @@ function npc_radomizer() {
                 return mergeObject(super.defaultOptions, {
                     id: "npc_randomizer_form",
                     title: l("NPC_Randomizer"),
-                    template: "modules/swade-toolkit/templates/npc_randomizer.hbs",
+                    template: "modules/swade-toolkit/templates/macros/npc_randomizer.hbs",
                     width: 400,
                     closeOnSubmit: false
                 });

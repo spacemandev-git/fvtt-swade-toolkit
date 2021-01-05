@@ -5,7 +5,7 @@ Hooks.on("renderTokenHUD", async (tokenHUD:TokenHUD, html:any, opts:any) => {
   let currentActor = game.actors.get(opts.actorId);
   const actionsButton = $(`<i id='actionsList' class="control-icon fas fa-gavel swade-hud-actions" title=${game.i18n.localize("SWADE_Actions.Actions")}></i>`)
   //@ts-ignore
-  let actionsList = await renderTemplate('modules/swade-toolkit/templates/ActionsList.hbs', getActionsList(currentActor, Array.from(currentActor.items)))
+  let actionsList = await renderTemplate('modules/swade-toolkit/templates/actions/ActionsList.hbs', getActionsList(currentActor, Array.from(currentActor.items)))
   actionsButton.append(actionsList)
   html.find(".right").append(actionsButton);
 

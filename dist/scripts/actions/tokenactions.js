@@ -13,7 +13,7 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, opts) => __awaiter(this, void 0, voi
     let currentActor = game.actors.get(opts.actorId);
     const actionsButton = $(`<i id='actionsList' class="control-icon fas fa-gavel swade-hud-actions" title=${game.i18n.localize("SWADE_Actions.Actions")}></i>`);
     //@ts-ignore
-    let actionsList = yield renderTemplate('modules/swade-toolkit/templates/ActionsList.hbs', getActionsList(currentActor, Array.from(currentActor.items)));
+    let actionsList = yield renderTemplate('modules/swade-toolkit/templates/actions/ActionsList.hbs', getActionsList(currentActor, Array.from(currentActor.items)));
     actionsButton.append(actionsList);
     html.find(".right").append(actionsButton);
     //make the thingies drag droppable
