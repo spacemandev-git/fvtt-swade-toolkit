@@ -143,8 +143,9 @@ export class AddTransformerUI extends FormApplication {
     activateListeners(html) {
         html.find("#loadTemplate").on("click", (evt) => {
             //Load Template from Library
-            let templateName = html.find("#templateName").val();
-            let transformer = game.automation.library.templates.find(el => el.name == templateName);
+            let templateName = html.find("#templateName").val().toString().split(":")[0];
+            let trigger = html.find("#templateName").val().toString().split(":")[1];
+            let transformer = game.automation.library.templates[trigger].find(el => el.name == templateName);
             transformer.entityID = html.find("#entityID").val().toString();
             transformer.entityType = html.find("#entityType").val.toString();
             this._selection = transformer;

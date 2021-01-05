@@ -21,7 +21,11 @@
     <span style="flex:1"></span>
     <select id="templateName" style="flex:2;">
       {{#each templates}}
-        <option value={{this.name}}>{{this.name}}</option>
+        <optgroup label={{@key}}>
+          {{#each this}}
+            <option value="{{@key}}:{{this.name}}">{{this.name}}</option>
+          {{/each}}
+        </optgroup>
       {{/each}}
     </select>
     <span style="flex:1"></span>

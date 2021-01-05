@@ -144,20 +144,6 @@ export class Handler {
         }));
     }
     registerSettings() {
-        /*
-          This menu should show a list of all active transformers for a given Handler
-          Transformers can be "disabled" or "deleted"
-          "Disabled" is important because of transformers that get loaded on reload, as deleting them would just recreate them on reload
-          "Deleting" will work when it's a Transformer that's been added as a user action
-    
-        */
-        game.settings.registerMenu("swade-toolkit", "handler-menu", {
-            name: game.i18n.localize("Automation.Automation_Text"),
-            label: game.i18n.localize("Automation.Transformers_Button"),
-            hint: game.i18n.localize("Automation.Transformers_Hint"),
-            type: TransformerSettings,
-            restricted: false,
-        });
         const getDefaultObject = () => {
             let obj = {};
             this.Triggers.forEach(t => {
@@ -265,47 +251,5 @@ export class Handler {
             }
         }
         return entityTransformers;
-    }
-}
-export class TransformerSettings extends FormApplication {
-    constructor(obj, opts = {}) {
-        super(obj, opts);
-    }
-    getData() {
-        return {};
-    }
-    static get defaultOptions() {
-        return mergeObject(super.defaultOptions, {
-            id: "swade-toolkit-transformer-settings",
-            title: game.i18n.localize("Automation.Automation_Text"),
-            template: 'modules/swade-toolkit/templates/TransformerSettings.hbs',
-            width: 400
-        });
-    }
-    activateListeners(html) {
-        return __awaiter(this, void 0, void 0, function* () {
-            html.find("#importAutomationRuleset").on("click", (evt) => __awaiter(this, void 0, void 0, function* () {
-                new Dialog({
-                    title: game.i18n.localize("Automation.Import_Ruleset"),
-                    content: `
-          <input id="importJSONinput" type="file" />
-        `,
-                    buttons: {
-                        import: {
-                            label: game.i18n.localize("SWADE.Ok"),
-                            callback: (html) => __awaiter(this, void 0, void 0, function* () {
-                                let jsonFile = $(html).find("#importJSONinput")[0]['files'][0];
-                                console.log(`SWADE Toolkit | Importing Ruleset ${jsonFile}`);
-                                let importRuleset = yield (yield fetch(jsonFile.path)).json();
-                                console.log(importRuleset);
-                            })
-                        }
-                    }
-                }).render(true);
-            }));
-            html.find("#viewRulesets").on("click", (evt) => {
-                console.log("Hello World!");
-            });
-        });
     }
 }
