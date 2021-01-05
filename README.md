@@ -1,4 +1,7 @@
 # Changelog
+### 1.0.2
+- Compendium Patcher upgraded to fuzzy match Hindrances for better compatibility with savaged us importer.
+
 ### 1.0.1
 - Compendium Patcher issue #1 and #4 fixed (arcane background for powers preserved, and patched items replaced by old ones after reload)
 - Updated Foundry compatible version to 0.79
