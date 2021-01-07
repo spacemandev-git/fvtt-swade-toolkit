@@ -125,11 +125,12 @@ export class AddTransformerUI extends FormApplication {
         this._selection.entityType = obj.entityType;
     }
     getData() {
-        return {
+        let obj = {
             templates: game.automation.library.templates,
             triggers: game.automation.Triggers,
             currentSelection: this._selection,
         };
+        return obj;
     }
     static get defaultOptions() {
         return mergeObject(super.defaultOptions, {
@@ -143,11 +144,11 @@ export class AddTransformerUI extends FormApplication {
     activateListeners(html) {
         html.find("#loadTemplate").on("click", (evt) => {
             //Load Template from Library
-            let templateName = html.find("#templateName").val().toString().split(":")[0];
-            let trigger = html.find("#templateName").val().toString().split(":")[1];
+            let trigger = html.find("#templateName").val().toString().split(":")[0];
+            let templateName = html.find("#templateName").val().toString().split(":")[1];
             let transformer = game.automation.library.templates[trigger].find(el => el.name == templateName);
             transformer.entityID = html.find("#entityID").val().toString();
-            transformer.entityType = html.find("#entityType").val.toString();
+            transformer.entityType = html.find("#entityType").val().toString();
             this._selection = transformer;
             //Render True
             this.render(true);

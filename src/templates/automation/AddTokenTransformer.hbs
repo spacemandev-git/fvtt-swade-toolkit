@@ -23,7 +23,7 @@
       {{#each templates}}
         <optgroup label={{@key}}>
           {{#each this}}
-            <option value="{{@key}}:{{this.name}}">{{this.name}}</option>
+            <option value="{{@../key}}:{{this.name}}">{{this.name}}</option>
           {{/each}}
         </optgroup>
       {{/each}}
@@ -34,7 +34,7 @@
   <div style="display:flex; flex-direction:column">
     <div class="info-row">
       <p class="title">{{localize "Automation.Transformer_Name"}}</p>
-      <input id="transformer-name" class="value" type="text" />
+      <input id="transformer-name" class="value" type="text" value="{{currentSelection.name}}">
     </div>
     <div class="info-row">
       <p class="title">{{localize "Automation.Trigger"}}</p>
@@ -70,11 +70,11 @@
     </div>
     <div class="info-row">
       <p class="title">{{localize "Automation.Description"}}</p>
-      <textarea id="description" class="value" value={{currentSelection.description}}></textarea>
+      <textarea id="description" class="value">{{currentSelection.description}}</textarea>
     </div>
     <div class="info-row">
       <p class="title">{{localize "Automation.Transformer_Function"}}</p>
-      <textarea id="transformer-function" class="value" value={{currentSelection.transformer}}></textarea>
+      <textarea id="transformer-function" class="value">{{currentSelection.transformer}}</textarea>
     </div>
   </div>
   <div style="display:flex">

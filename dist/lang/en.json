@@ -32,6 +32,7 @@
     "Function": "Function",
     "Execute_Order": "Execute Order",
     "Close":"Close",
+    "Add_Transformer": "Add Transformer",
     "Add_Transformer_To_Token": "+ Token",
     "Add_Transformer_To_Actor": "+ Actor",
     "Transformer_Name": "Transformer Name",

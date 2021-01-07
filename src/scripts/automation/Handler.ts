@@ -1,4 +1,4 @@
-import { getSwadeAction, SwadeAction } from "./IAction.js";
+import { SwadeAction } from "./IAction.js";
 
 export class Handler{
   /**
@@ -23,8 +23,8 @@ export class Handler{
 
   private startListeners(){
     //SwadeActor, SwadeItem, ActionID, Roll Object
-    Hooks.on("swadeChatCardAction", async (actor: Actor, item:Item, actionID: string, roll:Roll) => {
-      console.log(actor, item, actionID, roll);
+    Hooks.on("swadeChatCardAction", async (actor: Actor, item:Item, actionID: string, roll:Roll, userId:string) => {
+      //console.log(actor, item, actionID, roll);
       if(!actor.owner || !roll){
         //Only process the hook on the machine that the owns the Actor
         //don't process if roll is null (user canceled action)
@@ -36,7 +36,6 @@ export class Handler{
         if(userId == game.userId){
           chatMessage.delete();
         }         
-        return false;
       })
 
       //We're going to abuse the roll object here a little bit by stuffing a "modifiers" list in there
@@ -46,7 +45,7 @@ export class Handler{
       //it's a function so it can be reused with the token actions as well
       const getFlavor = (actor:Actor, item:Item, actionID:string, roll:Roll) => {
         let flavor = ''
-        let action:SwadeAction = getSwadeAction(item, actionID);
+        let action:SwadeAction = game.automation.util.getSwadeAction(item, actionID);
       
         if(action.type == "skill"){
           let skillItem = actor.items.find(el => el.name == action.skill);
@@ -73,15 +72,18 @@ export class Handler{
         flavor: getFlavor(actor,item,actionID, roll),
         roll:roll
       });
-  
+
       let transformers = this.getTransformersByEntityId("Actor", actor.id)['ItemAction']
       for(let transformer of transformers){
+        console.log(`SWADE Toolkit | Processing Actor Transformer: ${transformer.name}`)
         let transformFunction = eval(transformer.transformer);
-        let transformedResult = await transformFunction(actor, item, actionID, roll)
+        //actor,item,roll,userid,token //undefined because this is running for the actor
+        let transformedResult = await transformFunction(actor, item, actionID, roll, userId, undefined)
         actor = transformedResult.actor
         item = transformedResult.item,
         actionID = transformedResult.chatCard,
-        roll = transformedResult.roll
+        roll = transformedResult.roll,
+        userId = transformedResult.userId
       }
 
       let actorTokens:Token[] = canvas.tokens.placeables.filter((token:Token) => token.actor.id == actor.id)
@@ -91,20 +93,24 @@ export class Handler{
       } 
       // After Actor Transformers are done pass to Token Transformers
       for(let token of actorTokens){
+        console.log(`SWADE Toolkit | Processing Token: ${token.name}`)
         // the "T" versions of these is so each token gets the final result from the actor, not the token before it
         // otherwise tokens would be chaining the rolls across tokens
         let tActor = actor;
         let tItem = item;
         let tActionID = actionID;
         let tRoll = roll;
+        let tUID = userId;
 
         for(let transformer of this.getTransformersByEntityId("Token", token.id)['ItemAction']){
           let transformFunction = eval(transformer.transformer);
-          let transformedResult = await transformFunction(tActor, tItem, tActionID, tRoll)
+          //actor,item,roll,userid,token //passing in the token as it's running for the token
+          let transformedResult = await transformFunction(tActor, tItem, tActionID, tRoll, userId, token)
           tActor = transformedResult.actor
           tItem = transformedResult.item,
           tActionID = transformedResult.chatCard,
-          tRoll = transformedResult.roll  
+          tRoll = transformedResult.roll, 
+          tUID = transformedResult.userId
         }
       }
     })

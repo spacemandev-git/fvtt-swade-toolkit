@@ -1,6 +1,4 @@
 Hooks.on("renderTokenHUD", async (tokenHUD:TokenHUD, html:any, opts:any) => {
-  console.log(tokenHUD, html, opts)
-
   //@ts-ignore
   let currentActor = game.actors.get(opts.actorId);
   const actionsButton = $(`<i id='actionsList' class="control-icon fas fa-gavel swade-hud-actions" title=${game.i18n.localize("SWADE_Actions.Actions")}></i>`)
@@ -27,7 +25,6 @@ Hooks.on("renderTokenHUD", async (tokenHUD:TokenHUD, html:any, opts:any) => {
 
 async function handleActionDrop(evt:DragEvent){
   let data = JSON.parse(evt.dataTransfer.getData('text/plain'));
-  console.log("Data: ", data) //itemId, actionId, actorId
   const getTokenAtXY = (clientX, clientY) => {
     let token:Token = undefined;
     let gridSize = game.scenes.active.data['grid'];
@@ -48,7 +45,6 @@ async function handleActionDrop(evt:DragEvent){
     return token;
   }
   let token = getTokenAtXY(evt.clientX, evt.clientY);
-  console.log("Token:", token);
   
   //Set the dropped token as target
   //Doesn't do anything, assumes transformers will need this information for their magic

@@ -1,5 +1,4 @@
 node_modules/
 package_lock.json
 link.bat
-src/scripts/ruleset.ts
-dist/scripts/ruleset.js
+rulesets/ruleset.js

@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Hooks.on("ready", () => {
     /*
-    This menu should show a list of all active transformers for a given Handler
     Transformers can be "disabled" or "deleted"
     "Disabled" is important because of transformers that get loaded on reload, as deleting them would just recreate them on reload
     "Deleting" will work when it's a Transformer that's been added as a user action
@@ -28,7 +27,7 @@ Hooks.on("ready", () => {
         type: Object,
         default: {},
         onChange: (value) => {
-            console.log("SWADE Toolkit | Transformers Updated", value);
+            console.log("SWADE Toolkit | Transformer Templates Updated", value);
         }
     });
 });
@@ -71,6 +70,9 @@ export class TransformerLibrary {
         return __awaiter(this, void 0, void 0, function* () {
             let currentTemplates = game.settings.get("swade-toolkit", "templates");
             for (let newTemplate of newTemplates) {
+                if (!currentTemplates[newTemplate.trigger]) {
+                    currentTemplates[newTemplate.trigger] = [];
+                }
                 currentTemplates[newTemplate.trigger].push(newTemplate);
             }
             yield game.settings.set("swade-toolkit", "templates", currentTemplates);
@@ -81,6 +83,11 @@ export class TransformerLibrary {
             let currentTemplates = game.settings.get("swade-toolkit", "templates");
             currentTemplates[trigger] = currentTemplates[trigger].filter(el => el.name != templateName);
             yield game.settings.set("swade-toolkit", "templates", currentTemplates);
+        });
+    }
+    resetTemplates() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield game.settings.set("swade-toolkit", "templates", {});
         });
     }
     get templates() {
