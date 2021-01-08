@@ -6,7 +6,6 @@ export class Handler{
    * It doesn't correspond 1:1 with the name of the hooks because the Handler repackages hooks to better suit these triggers
    * Sometimes various hooks trigger the same Trigger, or there might not be an exact hook that accomplishes what needs to happen.
    * 
-   * When updating this list, ALSO update the DEFAULTS for the Transformers DB
    */
   Triggers = ["ItemAction"]
 
@@ -22,7 +21,6 @@ export class Handler{
   }
 
   private startListeners(){
-    //SwadeActor, SwadeItem, ActionID, Roll Object
     Hooks.on("swadeAction", async (actor: Actor, item:Item, actionID: string, roll:Roll, userId:string) => {
       console.log("Called swadeAction:", actor, item, actionID, roll, userId);
       if(!actor.owner || !roll){
@@ -74,17 +72,7 @@ export class Handler{
       });
 
       let transformers = this.getTransformersByEntityId("Actor", actor.id)['ItemAction']
-      for(let transformer of transformers){
-        console.log(`SWADE Toolkit | Processing Actor Transformer: ${transformer.name}`)
-        let transformFunction = eval(transformer.transformer);
-        //actor,item,roll,userid,token //undefined because this is running for the actor
-        let transformedResult = await transformFunction(actor, item, actionID, roll, userId, undefined)
-        actor = transformedResult.actor
-        item = transformedResult.item,
-        actionID = transformedResult.chatCard,
-        roll = transformedResult.roll,
-        userId = transformedResult.userId
-      }
+      await this.processTransformers(transformers, {actor: actor, item: item, actionID: actionID, roll:roll, userId: userId, token:undefined, haltExecution:false})
 
       let actorTokens:Token[] = canvas.tokens.placeables.filter((token:Token) => token.actor.id == actor.id)
       if(actorTokens.length == 0){
@@ -93,29 +81,27 @@ export class Handler{
       } 
       // After Actor Transformers are done pass to Token Transformers
       for(let token of actorTokens){
+        // If the same transformer (like Ammo Counter) is registered for two tokens of the same actor, there's no way to differentiate when they should fire
+        // As such, the transformer should only fire for the _currently selected token_ which can be fetched in the transformer by canavs.tokens.controlled[0]
         console.log(`SWADE Toolkit | Processing Token: ${token.name}`)
-        // the "T" versions of these is so each token gets the final result from the actor, not the token before it
-        // otherwise tokens would be chaining the rolls across tokens
-        let tActor = actor;
-        let tItem = item;
-        let tActionID = actionID;
-        let tRoll = roll;
-        let tUID = userId;
-
-        for(let transformer of this.getTransformersByEntityId("Token", token.id)['ItemAction']){
-          if(transformer.entityID != token.id){continue;} //don't process for any tokens this transformer isn't specifically targetting
-          console.log(`SWADE Toolkit | Processing Token Transformer: ${transformer.name}`)
-          let transformFunction = eval(transformer.transformer);
-          //actor,item,roll,userid,token //passing in the token as it's running for the token
-          let transformedResult = await transformFunction(transformer, tActor, tItem, tActionID, tRoll, userId, token)
-          tActor = transformedResult.actor
-          tItem = transformedResult.item,
-          tActionID = transformedResult.chatCard,
-          tRoll = transformedResult.roll, 
-          tUID = transformedResult.userId
-        }
+        let transformers = this.getTransformersByEntityId("Token", token.id)['ItemAction']
+        await this.processTransformers(transformers, {actor: actor, item: item, actionID: actionID, roll:roll, userId: userId, token:token, haltExecution:false})
       }
     })
+  }
+
+  private async processTransformers(transformers: ITransformer[], args: any){
+    let haltExecution = false;
+    for(let transformer of transformers){
+      args.transformer = transformer; 
+      if(haltExecution){return;}
+      let transformFunction = eval(transformer.transformer);
+      let mutation = await transformFunction(args);
+      for(let key of Object.keys(mutation)){
+        args[key] = mutation[key];
+        haltExecution = mutation['haltExecution']
+      }
+    }
   }
 
   private getDefaultObject = () => {
@@ -208,7 +194,6 @@ export class Handler{
   public async resetTransformers(){
     await game.settings.set("swade-toolkit", "transformers", this.getDefaultObject())
   }
-
 
   /**
    * Returns a version of the transformers object, with only the transformers that are apply to the passed entity ID

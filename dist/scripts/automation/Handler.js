@@ -14,7 +14,6 @@ export class Handler {
          * It doesn't correspond 1:1 with the name of the hooks because the Handler repackages hooks to better suit these triggers
          * Sometimes various hooks trigger the same Trigger, or there might not be an exact hook that accomplishes what needs to happen.
          *
-         * When updating this list, ALSO update the DEFAULTS for the Transformers DB
          */
         this.Triggers = ["ItemAction"];
         this.getDefaultObject = () => {
@@ -37,7 +36,6 @@ export class Handler {
         return 0;
     }
     startListeners() {
-        //SwadeActor, SwadeItem, ActionID, Roll Object
         Hooks.on("swadeAction", (actor, item, actionID, roll, userId) => __awaiter(this, void 0, void 0, function* () {
             console.log("Called swadeAction:", actor, item, actionID, roll, userId);
             if (!actor.owner || !roll) {
@@ -84,17 +82,7 @@ export class Handler {
                 roll: roll
             });
             let transformers = this.getTransformersByEntityId("Actor", actor.id)['ItemAction'];
-            for (let transformer of transformers) {
-                console.log(`SWADE Toolkit | Processing Actor Transformer: ${transformer.name}`);
-                let transformFunction = eval(transformer.transformer);
-                //actor,item,roll,userid,token //undefined because this is running for the actor
-                let transformedResult = yield transformFunction(actor, item, actionID, roll, userId, undefined);
-                actor = transformedResult.actor;
-                item = transformedResult.item,
-                    actionID = transformedResult.chatCard,
-                    roll = transformedResult.roll,
-                    userId = transformedResult.userId;
-            }
+            yield this.processTransformers(transformers, { actor: actor, item: item, actionID: actionID, roll: roll, userId: userId, token: undefined, haltExecution: false });
             let actorTokens = canvas.tokens.placeables.filter((token) => token.actor.id == actor.id);
             if (actorTokens.length == 0) {
                 //There are no tokens
@@ -102,30 +90,30 @@ export class Handler {
             }
             // After Actor Transformers are done pass to Token Transformers
             for (let token of actorTokens) {
+                // If the same transformer (like Ammo Counter) is registered for two tokens of the same actor, there's no way to differentiate when they should fire
+                // As such, the transformer should only fire for the _currently selected token_ which can be fetched in the transformer by canavs.tokens.controlled[0]
                 console.log(`SWADE Toolkit | Processing Token: ${token.name}`);
-                // the "T" versions of these is so each token gets the final result from the actor, not the token before it
-                // otherwise tokens would be chaining the rolls across tokens
-                let tActor = actor;
-                let tItem = item;
-                let tActionID = actionID;
-                let tRoll = roll;
-                let tUID = userId;
-                for (let transformer of this.getTransformersByEntityId("Token", token.id)['ItemAction']) {
-                    if (transformer.entityID != token.id) {
-                        continue;
-                    } //don't process for any tokens this transformer isn't specifically targetting
-                    console.log(`SWADE Toolkit | Processing Token Transformer: ${transformer.name}`);
-                    let transformFunction = eval(transformer.transformer);
-                    //actor,item,roll,userid,token //passing in the token as it's running for the token
-                    let transformedResult = yield transformFunction(transformer, tActor, tItem, tActionID, tRoll, userId, token);
-                    tActor = transformedResult.actor;
-                    tItem = transformedResult.item,
-                        tActionID = transformedResult.chatCard,
-                        tRoll = transformedResult.roll,
-                        tUID = transformedResult.userId;
-                }
+                let transformers = this.getTransformersByEntityId("Token", token.id)['ItemAction'];
+                yield this.processTransformers(transformers, { actor: actor, item: item, actionID: actionID, roll: roll, userId: userId, token: token, haltExecution: false });
             }
         }));
+    }
+    processTransformers(transformers, args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let haltExecution = false;
+            for (let transformer of transformers) {
+                args.transformer = transformer;
+                if (haltExecution) {
+                    return;
+                }
+                let transformFunction = eval(transformer.transformer);
+                let mutation = yield transformFunction(args);
+                for (let key of Object.keys(mutation)) {
+                    args[key] = mutation[key];
+                    haltExecution = mutation['haltExecution'];
+                }
+            }
+        });
     }
     registerSettings() {
         /**

@@ -178,7 +178,8 @@ export class AddTransformerUI extends FormApplication {
       ui.notifications.info(`Transformer (${transformer.name}) added to Token (${ actorName ? actorName : "*"})`)
     
       //Refresh Transformer Menu
-      document.getElementById('tokenTransformerMenu').remove();
+      document.getElementById('tokenTransformerMenu')?.remove();
+      this.close();
     })
 
 
@@ -206,6 +207,7 @@ export class AddTransformerUI extends FormApplication {
     
       //Refresh Transformer Menu
       document.getElementById('tokenTransformerMenu')?.remove();
+      this.close();
     })
   }
 }

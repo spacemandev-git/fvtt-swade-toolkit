@@ -9,3 +9,4 @@
 - Transformers should always be listed in execution order
 - Transformers should be deleted when the relevant token or actor is deleted (but not wildcard transformers!)
 - Wild Card ("*") transformers should show up Yellow in the transformer list
+- Drag Drop actions should fire transformers as well as clicking on the action buttons
