@@ -21,6 +21,7 @@ export class Handler{
   }
 
   private startListeners(){
+    if(game.settings.get("swade-toolkit", "automation") == false){return;} // don't start listeners if there's automation isn't on.
     Hooks.on("swadeAction", async (actor: Actor, item:Item, actionID: string, roll:Roll, userId:string) => {
       console.log("Called swadeAction:", actor, item, actionID, roll, userId);
       if(!actor.owner || !roll){
@@ -40,37 +41,10 @@ export class Handler{
       //Ideally every transformer will append this list to include the modifiers they added and the description of them
       roll['modifiers'] = [];
 
-      //it's a function so it can be reused with the token actions as well
-      const getFlavor = (actor:Actor, item:Item, actionID:string, roll:Roll) => {
-        let flavor = ''
-        let action:SwadeAction = game.automation.util.getSwadeAction(item, actionID);
-      
-        if(action.type == "skill"){
-          let skillItem = actor.items.find(el => el.name == action.skill);
-          if(skillItem){
-            let coreSkillFormula = skillItem.data.data.die.modifier != "" ? `1d${skillItem.data.data.die.sides} +${skillItem.data.data.die.modifier}` : `1d${skillItem.data.data.die.sides}`
-            flavor = `${item.data.data.actions.skill} (${coreSkillFormula}) ${game.i18n.localize('SWADE.SkillTest')}`
-          } else {
-            flavor = `${game.i18n.localize("SWADE.Unskilled")} (1d4-2) ${game.i18n.localize('SWADE.SkillTest')}`
-          }
-        } else {
-          let ap = getProperty(item.data, 'data.ap') ? `(${game.i18n.localize('SWADE.Ap')} ${getProperty(item.data, 'data.ap')})` : `(${game.i18n.localize('SWADE.Ap')} 0)`
-          flavor = `${item.name} ${game.i18n.localize("SWADE.Dmg")} (${item.data.data.damage}) ${ap}`
-        }
-      
-        flavor += "<br>"
-        for(let modifier of roll['modifiers']){
-          flavor += `${modifier.description} : ${modifier.value}`
-        }
-        return flavor;
-      }
-      
-      roll['chatMessage'] = await roll.toMessage({
-        speaker: ChatMessage.getSpeaker({actor:actor}),
-        flavor: getFlavor(actor,item,actionID, roll),
-        roll:roll
-      });
 
+      
+      roll['chatMessage'] = undefined;
+      
       let transformers = this.getTransformersByEntityId("Actor", actor.id)['ItemAction']
       await this.processTransformers(transformers, {actor: actor, item: item, actionID: actionID, roll:roll, userId: userId, token:undefined, haltExecution:false})
 
@@ -126,6 +100,18 @@ export class Handler{
       default: this.getDefaultObject(),
       onChange: (value: any) => {
         console.log("SWADE Toolkit | Transformers Updated", value)
+      }
+    })
+
+    game.settings.register('swade-toolkit', 'automation', {
+      name: JSON.stringify(game.i18n.localize("Automation.Automation_Text")).replace("\"", ""),
+      hint: game.i18n.localize("Automation.Automation_Setting_Hint"),
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: false,
+      onChange: (value: boolean) => {
+        console.log("SWADE Toolkit | Automation:", value);
       }
     })
   }

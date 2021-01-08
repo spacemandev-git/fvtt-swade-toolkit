@@ -16,6 +16,10 @@
   }
 </style>
 <div class="add-token-transformer">
+  <div style="display:flex">
+    <button id="registerTokenTransformerButton">{{localize "Automation.Add_Transformer_To_Token"}}</button>
+    <button id="registerActorTransformerButton">{{localize "Automation.Add_Transformer_To_Actor"}}</button>
+  </div>
   <div style="display:flex;">
     <h1 style="flex:5">{{localize "Automation.Add_Transformer"}}</h1>
     <span style="flex:1"></span>
@@ -80,9 +84,5 @@
       <p class="title">{{localize "Automation.Transformer_Function"}}</p>
       <textarea id="transformer-function" class="value">{{currentSelection.transformer}}</textarea>
     </div>
-  </div>
-  <div style="display:flex">
-    <button id="registerTokenTransformerButton">{{localize "Automation.Add_Transformer_To_Token"}}</button>
-    <button id="registerActorTransformerButton">{{localize "Automation.Add_Transformer_To_Actor"}}</button>
   </div>
 </div>

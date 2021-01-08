@@ -79,3 +79,4 @@ interface ITransformer {
 // custom chat cards 
 // wildcard transformers are breaking right now
 // WC transformers should be added as Token Transformers on token creation?
+// Change Info View to Edit

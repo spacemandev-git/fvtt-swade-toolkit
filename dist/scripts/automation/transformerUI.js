@@ -10,6 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 // Add/remove keywords from scene
 Hooks.on("controlToken", (token, controlled) => {
+    if (game.settings.get("swade-toolkit", "automation") == false) {
+        return;
+    }
     if (!controlled) {
         // Token is being deselected
         document.getElementById("tokenTransformersButton").remove();
@@ -155,6 +158,11 @@ export class AddTransformerUI extends FormApplication {
             this.render(true);
         });
         html.find("#registerTokenTransformerButton").on("click", (evt) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
+            if (html.find("#transformer-name").val().toString() == "") {
+                ui.notifications.error(game.i18n.localize("Automation.Error_Empty_Transformer"));
+                return;
+            }
             //take ID fields and build a transformer
             //change name to name-entityID when creating the transformer
             let transformer = {
@@ -174,10 +182,11 @@ export class AddTransformerUI extends FormApplication {
             let actorName = canvas.tokens.placeables.find(el => { var _a; return el.id == ((_a = html.find("#entityID")) === null || _a === void 0 ? void 0 : _a.val().toString()); }).actor.name;
             ui.notifications.info(`Transformer (${transformer.name}) added to Token (${actorName ? actorName : "*"})`);
             //Refresh Transformer Menu
-            document.getElementById('tokenTransformerMenu').remove();
+            (_a = document.getElementById('tokenTransformerMenu')) === null || _a === void 0 ? void 0 : _a.remove();
+            this.close();
         }));
         html.find("#registerActorTransformerButton").on("click", (evt) => __awaiter(this, void 0, void 0, function* () {
-            var _a;
+            var _b;
             //take ID fields and build a transformer
             //change name to name-entityID when creating the transformer
             let entityID = html.find("#entityID").val().toString() == "*" ? "*" : canvas.tokens.placeables.find(el => el.id == html.find("#entityID").val().toString()).actor.id;
@@ -197,7 +206,8 @@ export class AddTransformerUI extends FormApplication {
             //UI Notifications that it was added
             ui.notifications.info(`Transformer (${transformer.name}) added to Actor (${canvas.tokens.placeables.find(el => el.id == html.find("#entityID").val().toString()).actor.name})`);
             //Refresh Transformer Menu
-            (_a = document.getElementById('tokenTransformerMenu')) === null || _a === void 0 ? void 0 : _a.remove();
+            (_b = document.getElementById('tokenTransformerMenu')) === null || _b === void 0 ? void 0 : _b.remove();
+            this.close();
         }));
     }
 }

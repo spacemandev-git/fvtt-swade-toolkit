@@ -4,6 +4,8 @@ import { ITransformer } from "./Handler.js";
 
 // Add/remove keywords from scene
 Hooks.on("controlToken", (token:Token, controlled:boolean) => {
+  if(game.settings.get("swade-toolkit", "automation") == false){return;}
+
   if(!controlled){
     // Token is being deselected
     document.getElementById("tokenTransformersButton").remove();
@@ -157,6 +159,11 @@ export class AddTransformerUI extends FormApplication {
     })
 
     html.find("#registerTokenTransformerButton").on("click", async (evt) => {
+      if(html.find("#transformer-name").val().toString() == ""){
+        ui.notifications.error(game.i18n.localize("Automation.Error_Empty_Transformer"));
+        return;
+      }
+
       //take ID fields and build a transformer
       //change name to name-entityID when creating the transformer
       let transformer:ITransformer = {

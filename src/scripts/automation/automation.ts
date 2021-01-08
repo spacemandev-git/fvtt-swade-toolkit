@@ -76,4 +76,36 @@ class Utility {
     }
     return action;
   }
+
+    /**
+   * Default roll flavor text
+   * @param actor 
+   * @param item 
+   * @param actionID 
+   * @param roll 
+   */
+  public getFlavor = (actor:Actor, item:Item, actionID:string, roll:Roll) => {
+    let flavor = ''
+    let action:SwadeAction = game.automation.util.getSwadeAction(item, actionID);
+  
+    if(action.type == "skill"){
+      let skillItem = actor.items.find(el => el.name == action.skill);
+      if(skillItem){
+        let coreSkillFormula = skillItem.data.data.die.modifier != "" ? `1d${skillItem.data.data.die.sides} +${skillItem.data.data.die.modifier}` : `1d${skillItem.data.data.die.sides}`
+        flavor = `${item.data.data.actions.skill} (${coreSkillFormula}) ${game.i18n.localize('SWADE.SkillTest')}`
+      } else {
+        flavor = `${game.i18n.localize("SWADE.Unskilled")} (1d4-2) ${game.i18n.localize('SWADE.SkillTest')}`
+      }
+    } else {
+      let ap = getProperty(item.data, 'data.ap') ? `(${game.i18n.localize('SWADE.Ap')} ${getProperty(item.data, 'data.ap')})` : `(${game.i18n.localize('SWADE.Ap')} 0)`
+      flavor = `${item.name} ${game.i18n.localize("SWADE.Dmg")} (${item.data.data.damage}) ${ap}`
+    }
+  
+    flavor += "<br>"
+    for(let modifier of roll['modifiers']){
+      flavor += `${modifier.description} : ${modifier.value}`
+      flavor += "<br>"
+    }
+    return flavor;
+  }
 }

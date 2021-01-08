@@ -43,7 +43,9 @@
     "Load_Transformer_Template": "Load transformer template",
     "Import_Ruleset": "Import JSON ruleset",
     "View_Rulesets": "View installed rulesets",
-    "Version": "Version"
+    "Version": "Version",
+    "Error_Empty_Transformer": "Cannot add an empty transformer to the array.",
+    "Automation_Setting_Hint": "Requires refresh to toggle on/off"
   },
   "SWADE_Actions": {
     "Actions": "Actions"

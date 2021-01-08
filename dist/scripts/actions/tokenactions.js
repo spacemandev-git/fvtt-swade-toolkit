@@ -58,8 +58,10 @@ function handleActionDrop(evt) {
             yield token.setTarget(true, game.user, true, false);
         }
         //handle the action
-        let actor = game.actors.get(data.actorId);
+        //let actor = game.actors.get(data.actorId);
+        let actor = canvas.tokens.controlled[0].actor; //otherwise it'll always grab from the unlinked default sheet and not the specific token sheet
         let item = actor.items.find(el => el.id == data.itemId);
+        console.debug("SWADE Toolkit | Firing Action", item, actor, data.actionId);
         yield game.swade.SwadeItem._handleAdditionalActions(item, actor, data.actionId);
     });
 }
