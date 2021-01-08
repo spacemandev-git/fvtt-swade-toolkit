@@ -17,6 +17,13 @@ export class Handler {
          * When updating this list, ALSO update the DEFAULTS for the Transformers DB
          */
         this.Triggers = ["ItemAction"];
+        this.getDefaultObject = () => {
+            let obj = {};
+            this.Triggers.forEach(t => {
+                obj[t] = [];
+            });
+            return obj;
+        };
         this.registerSettings();
         this.startListeners();
     }
@@ -31,8 +38,8 @@ export class Handler {
     }
     startListeners() {
         //SwadeActor, SwadeItem, ActionID, Roll Object
-        Hooks.on("swadeChatCardAction", (actor, item, actionID, roll, userId) => __awaiter(this, void 0, void 0, function* () {
-            //console.log(actor, item, actionID, roll);
+        Hooks.on("swadeAction", (actor, item, actionID, roll, userId) => __awaiter(this, void 0, void 0, function* () {
+            console.log("Called swadeAction:", actor, item, actionID, roll, userId);
             if (!actor.owner || !roll) {
                 //Only process the hook on the machine that the owns the Actor
                 //don't process if roll is null (user canceled action)
@@ -104,9 +111,13 @@ export class Handler {
                 let tRoll = roll;
                 let tUID = userId;
                 for (let transformer of this.getTransformersByEntityId("Token", token.id)['ItemAction']) {
+                    if (transformer.entityID != token.id) {
+                        continue;
+                    } //don't process for any tokens this transformer isn't specifically targetting
+                    console.log(`SWADE Toolkit | Processing Token Transformer: ${transformer.name}`);
                     let transformFunction = eval(transformer.transformer);
                     //actor,item,roll,userid,token //passing in the token as it's running for the token
-                    let transformedResult = yield transformFunction(tActor, tItem, tActionID, tRoll, userId, token);
+                    let transformedResult = yield transformFunction(transformer, tActor, tItem, tActionID, tRoll, userId, token);
                     tActor = transformedResult.actor;
                     tItem = transformedResult.item,
                         tActionID = transformedResult.chatCard,
@@ -117,13 +128,6 @@ export class Handler {
         }));
     }
     registerSettings() {
-        const getDefaultObject = () => {
-            let obj = {};
-            this.Triggers.forEach(t => {
-                obj[t] = [];
-            });
-            return obj;
-        };
         /**
          * This is globally accessible storage for the list of transformer objects registered to this handler
          * They are organized by *trigger_name* which is often a *hook_name*, but in certain instances, might be different than the hook when the handler had to repackage it for whatever reason.
@@ -133,7 +137,7 @@ export class Handler {
             scope: "world",
             config: false,
             type: Object,
-            default: getDefaultObject(),
+            default: this.getDefaultObject(),
             onChange: (value) => {
                 console.log("SWADE Toolkit | Transformers Updated", value);
             }
@@ -204,6 +208,11 @@ export class Handler {
             catch (e) {
                 throw e;
             }
+        });
+    }
+    resetTransformers() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield game.settings.set("swade-toolkit", "transformers", this.getDefaultObject());
         });
     }
     /**

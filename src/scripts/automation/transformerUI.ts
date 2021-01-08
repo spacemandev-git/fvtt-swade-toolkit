@@ -114,7 +114,8 @@ export class AddTransformerUI extends FormApplication {
     trigger: "ItemAction",
     execOrderNum: 1,
     description: "",
-    transformer: ""
+    transformer: "",
+    version: "0.0.0"
   }
 
   constructor(obj, opts={}){
@@ -167,7 +168,8 @@ export class AddTransformerUI extends FormApplication {
         trigger: html.find("#trigger").val().toString(),
         execOrderNum: parseInt(html.find("#execOrderNum").val().toString()),
         description: html.find("#description").val().toString(),
-        transformer: html.find("#transformer-function").val().toString()
+        transformer: html.find("#transformer-function").val().toString(),
+        version: html.find("#version").val().toString()
       }
 
       game.automation.registerTransformer(transformer.trigger, transformer)
@@ -194,7 +196,8 @@ export class AddTransformerUI extends FormApplication {
         trigger: html.find("#trigger").val().toString(),
         execOrderNum: parseInt(html.find("#execOrderNum").val().toString()),
         description: html.find("#description").val().toString(),
-        transformer: html.find("#transformer-function").val().toString()
+        transformer: html.find("#transformer-function").val().toString(),
+        version: html.find("#version").val().toString()
       }
 
       game.automation.registerTransformer(transformer.trigger, transformer)
@@ -202,7 +205,7 @@ export class AddTransformerUI extends FormApplication {
       ui.notifications.info(`Transformer (${transformer.name}) added to Actor (${canvas.tokens.placeables.find(el => el.id == html.find("#entityID").val().toString()).actor.name})`)
     
       //Refresh Transformer Menu
-      document.getElementById('tokenTransformerMenu').remove();
+      document.getElementById('tokenTransformerMenu')?.remove();
     })
   }
 }

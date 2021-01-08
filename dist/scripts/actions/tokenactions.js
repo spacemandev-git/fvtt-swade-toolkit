@@ -54,12 +54,13 @@ function handleActionDrop(evt) {
         //Set the dropped token as target
         //Doesn't do anything, assumes transformers will need this information for their magic
         if (token) {
-            token.setTarget(true, game.user, true, false);
+            //this await might be unnecessary but like w/e
+            yield token.setTarget(true, game.user, true, false);
         }
         //handle the action
         let actor = game.actors.get(data.actorId);
         let item = actor.items.find(el => el.id == data.itemId);
-        game.swade.SwadeItem._handleAdditionalActions(item, actor, data.actionId);
+        yield game.swade.SwadeItem._handleAdditionalActions(item, actor, data.actionId);
     });
 }
 function getActionsList(actor, actorItems) {

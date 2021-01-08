@@ -119,7 +119,8 @@ export class AddTransformerUI extends FormApplication {
             trigger: "ItemAction",
             execOrderNum: 1,
             description: "",
-            transformer: ""
+            transformer: "",
+            version: "0.0.0"
         };
         this._selection.entityID = obj.entityID;
         this._selection.entityType = obj.entityType;
@@ -165,7 +166,8 @@ export class AddTransformerUI extends FormApplication {
                 trigger: html.find("#trigger").val().toString(),
                 execOrderNum: parseInt(html.find("#execOrderNum").val().toString()),
                 description: html.find("#description").val().toString(),
-                transformer: html.find("#transformer-function").val().toString()
+                transformer: html.find("#transformer-function").val().toString(),
+                version: html.find("#version").val().toString()
             };
             game.automation.registerTransformer(transformer.trigger, transformer);
             //UI Notifications that it was added
@@ -175,6 +177,7 @@ export class AddTransformerUI extends FormApplication {
             document.getElementById('tokenTransformerMenu').remove();
         }));
         html.find("#registerActorTransformerButton").on("click", (evt) => __awaiter(this, void 0, void 0, function* () {
+            var _a;
             //take ID fields and build a transformer
             //change name to name-entityID when creating the transformer
             let entityID = html.find("#entityID").val().toString() == "*" ? "*" : canvas.tokens.placeables.find(el => el.id == html.find("#entityID").val().toString()).actor.id;
@@ -187,13 +190,14 @@ export class AddTransformerUI extends FormApplication {
                 trigger: html.find("#trigger").val().toString(),
                 execOrderNum: parseInt(html.find("#execOrderNum").val().toString()),
                 description: html.find("#description").val().toString(),
-                transformer: html.find("#transformer-function").val().toString()
+                transformer: html.find("#transformer-function").val().toString(),
+                version: html.find("#version").val().toString()
             };
             game.automation.registerTransformer(transformer.trigger, transformer);
             //UI Notifications that it was added
             ui.notifications.info(`Transformer (${transformer.name}) added to Actor (${canvas.tokens.placeables.find(el => el.id == html.find("#entityID").val().toString()).actor.name})`);
             //Refresh Transformer Menu
-            document.getElementById('tokenTransformerMenu').remove();
+            (_a = document.getElementById('tokenTransformerMenu')) === null || _a === void 0 ? void 0 : _a.remove();
         }));
     }
 }

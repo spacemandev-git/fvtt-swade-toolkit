@@ -1,4 +1,4 @@
 node_modules/
 package_lock.json
 link.bat
-rulesets/ruleset.js
+rulesets/

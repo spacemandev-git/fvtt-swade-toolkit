@@ -54,19 +54,23 @@
     </div>
     <div class="info-row">
       <p class="title">{{localize "Automation.Entity_ID"}}</p>
-      <input id="entityID" class="value" type="text" value={{currentSelection.entityID}} />
+      <input id="entityID" class="value" type="text" value="{{currentSelection.entityID}}" />
     </div>
     <div class="info-row">
       <p class="title">{{localize "Automation.Entity_Type"}}</p>
-      <input id="entityType" class="value" type="text" value={{currentSelection.entityType}} />
+      <input id="entityType" class="value" type="text" value="{{currentSelection.entityType}}" />
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Version"}}</p>
+      <input id="version" class="value" type="text" value="{{currentSelection.version}}" disabled/>
     </div>
     <div class="info-row">
       <p class="title">{{localize "Automation.Duration"}}</p>
-      <input id="duration" class="value" type="text" value={{currentSelection.duration}} />
+      <input id="duration" class="value" type="text" value="{{currentSelection.duration}}" />
     </div>
     <div class="info-row">
       <p class="title">{{localize "Automation.Execute_Order"}}</p>
-      <input id="execOrderNum" class="value" type="number" value={{currentSelection.execOrderNum}} />
+      <input id="execOrderNum" class="value" type="number" value="{{currentSelection.execOrderNum}}" />
     </div>
     <div class="info-row">
       <p class="title">{{localize "Automation.Description"}}</p>

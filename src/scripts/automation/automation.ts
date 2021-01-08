@@ -14,15 +14,15 @@ Hooks.on("ready", () => {
 /**
  * @param token is of type *any* because it's the token data, not the token itself
  */
-Hooks.on("deleteToken", (scene:Scene, token:Token['data'], obj:any, userId: string) => {
+Hooks.on("deleteToken", async (scene:Scene, token:Token['data'], obj:any, userId: string) => {
   if(game.userId != userId){return;} //only process this on the machine that made the token
   //Delete all the transformers related to this token
   for(let transformer of game.automation.getTransformersByEntityId('Token', token.id, false)){
-    game.automation.removeTransformer(transformer.trigger, transformer.name);
+    await game.automation.removeTransformer(transformer.trigger, transformer.name);
   }
 })
 
-Hooks.on("deleteToken", (actor:Actor, obj:any, userId: string) => {
+Hooks.on("deleteActor", (actor:Actor, obj:any, userId: string) => {
   if(game.userId != userId){return;} //only process this on the machine that made the token
   //Delete all the transformers related to this token
   for(let transformer of game.automation.getTransformersByEntityId('Actor', actor.id, false)){

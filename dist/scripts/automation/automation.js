@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { Handler } from './Handler.js';
 import { TransformerLibrary } from './TransformerLibrary.js';
 Hooks.on("ready", () => {
@@ -11,16 +20,16 @@ Hooks.on("ready", () => {
 /**
  * @param token is of type *any* because it's the token data, not the token itself
  */
-Hooks.on("deleteToken", (scene, token, obj, userId) => {
+Hooks.on("deleteToken", (scene, token, obj, userId) => __awaiter(void 0, void 0, void 0, function* () {
     if (game.userId != userId) {
         return;
     } //only process this on the machine that made the token
     //Delete all the transformers related to this token
     for (let transformer of game.automation.getTransformersByEntityId('Token', token.id, false)) {
-        game.automation.removeTransformer(transformer.trigger, transformer.name);
+        yield game.automation.removeTransformer(transformer.trigger, transformer.name);
     }
-});
-Hooks.on("deleteToken", (actor, obj, userId) => {
+}));
+Hooks.on("deleteActor", (actor, obj, userId) => {
     if (game.userId != userId) {
         return;
     } //only process this on the machine that made the token

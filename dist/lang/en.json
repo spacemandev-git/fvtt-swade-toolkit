@@ -42,7 +42,8 @@
     "Transformer_Function": "Transformer Function",
     "Load_Transformer_Template": "Load transformer template",
     "Import_Ruleset": "Import JSON ruleset",
-    "View_Rulesets": "View installed rulesets"
+    "View_Rulesets": "View installed rulesets",
+    "Version": "Version"
   },
   "SWADE_Actions": {
     "Actions": "Actions"
