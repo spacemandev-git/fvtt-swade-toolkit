@@ -20,7 +20,7 @@
     "Accept2": "Please just patch my actors."
   },
   "Macros": {
-    "Enable_All_Macros": "Import Macros"
+    "Enable_All_Macros": "Enable Macros (See Macro Directory)"
   },
   "Automation": {
     "Toggle_Automation": "Toggle Automation",
@@ -65,5 +65,9 @@
     "SWADE_Stunned": "Stunned",
     "SWADE_Entangled": "Entangled",
     "SWADE_Bound": "Bound"
+  },
+  "Active_Effects": {
+    "Enable_Skill_Active_Effects": "Enable Skill Active Effects (d!Skillname, m!Skillname)",
+    "Die_Must_Be_Even": "Die increment/decrement must be an even number!"
   }
 }
