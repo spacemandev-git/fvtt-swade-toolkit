@@ -55,6 +55,12 @@
     "Rolled": "rolled"
   },
   "Status_Effects": {
-    "Link_Status_Effects": "Link Status Effects"
+    "Link_Status_Effects": "Link Status Effects",
+    "SWADE_Shaken": "Shaken",
+    "SWADE_Distracted": "Distracted",
+    "SWADE_Vulnerable": "Vulnerable",
+    "SWADE_Stunned": "Stunned",
+    "SWADE_Entangled": "Entangled",
+    "SWADE_Bound": "Bound"
   }
 }

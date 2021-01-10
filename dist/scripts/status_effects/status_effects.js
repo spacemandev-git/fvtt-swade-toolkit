@@ -22,7 +22,15 @@ class StatusEffects {
         if (!game.settings.get("swade-toolkit", "link-status-effects")) {
             return; //don't do anything if the setting isn't turned on
         }
-        //Status Linking
+        let coreStatusList = [
+            'Shaken',
+            'Distracted',
+            'Vulnerable',
+            'Stunned',
+            'Entangled',
+            'Bound',
+        ];
+        //Status Linking for NPCs
         Hooks.on("updateToken", (scene, tokenDiff, data, diff, userId) => {
             var _a;
             if (!game.userId == userId || !diff.diff) {
@@ -31,14 +39,6 @@ class StatusEffects {
             //sync the sheet and token
             if (!tokenDiff.actorLink) {
                 let token = canvas.tokens.get(tokenDiff._id);
-                let coreStatusList = [
-                    'Shaken',
-                    'Distracted',
-                    'Vulnerable',
-                    'Stunned',
-                    'Entangled',
-                    'Bound',
-                ];
                 let effects = (_a = tokenDiff.actorData) === null || _a === void 0 ? void 0 : _a.effects;
                 /**
                  * CAN ONLY DO ONE WAY BINDING CURRENTLY
@@ -61,6 +61,66 @@ class StatusEffects {
                             token.actor.update({
                                 [`data.status.is${status}`]: false
                             });
+                        }
+                    }
+                }
+            }
+        });
+        //Status Linking for Wildcards
+        Hooks.on("createActiveEffect", (actor, activeEffect, opts, userId) => {
+            if (game.userId != userId) {
+                return;
+            }
+            for (let status of coreStatusList) {
+                if (activeEffect.label == status) {
+                    actor.update({
+                        [`data.status.is${status}`]: true
+                    });
+                }
+            }
+        });
+        Hooks.on("deleteActiveEffect", (actor, activeEffect, opts, userId) => {
+            if (game.userId != userId) {
+                return;
+            }
+            for (let status of coreStatusList) {
+                if (activeEffect.label == status) {
+                    actor.update({
+                        [`data.status.is${status}`]: false
+                    });
+                }
+            }
+        });
+        // Sheet was changed so make a AE, which will trigger the above hook and make a token 
+        Hooks.on("updateActor", (actor, change, opts, userId) => {
+            var _a;
+            if (game.userId != userId && opts.diff) {
+                return;
+            }
+            if ((_a = change.data) === null || _a === void 0 ? void 0 : _a.status) {
+                for (let status of coreStatusList) {
+                    if (change.data.status[`is${status}`]) {
+                        //status was changed to true
+                        //create active effect
+                        if (!actor['effects'].find(el => el.data.label == status)) {
+                            //only create it once, if it's already there, no need to create it again
+                            actor.createEmbeddedEntity('ActiveEffect', {
+                                label: status,
+                                icon: `systems/swade/assets/icons/status/status_${status.toLowerCase()}.svg`,
+                                flags: {
+                                    core: {
+                                        statusId: status.toLowerCase()
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    else if (change.data.status[`is${status}`] == false) { //specifically want false and not undefined so it's acted only when changed
+                        //status was changed to false
+                        //delete active effect
+                        let effectToDelete = actor['effects'].find(el => el.data.label == status);
+                        if (effectToDelete) {
+                            actor.deleteEmbeddedEntity("ActiveEffect", effectToDelete.id);
                         }
                     }
                 }
