@@ -1,3 +1,12 @@
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 //register settings
 Hooks.on("ready", () => {
     game.toolkit = {
@@ -30,6 +39,40 @@ class StatusEffects {
             'Entangled',
             'Bound',
         ];
+        //Hack: Add a listener onto the status icons that calls the actor update on the sheet
+        Hooks.on("renderTokenHUD", (tokenHUD, html, opts) => {
+            let token = canvas.tokens.get(opts._id);
+            if (!token.owner) {
+                return;
+            } //only process for the token owner
+            html.find(".effect-control").on("click", (evt) => __awaiter(this, void 0, void 0, function* () {
+                evt.preventDefault();
+                let status = evt.target.title;
+                if (!coreStatusList.includes(status)) {
+                    return;
+                } //we only care about core statuses
+                let tokenEffects = token.actor['effects'];
+                if (!token.actor.data.data.status[`is${status}`] && !tokenEffects.find(el => el.data.label == status)) {
+                    //status is FALSE on actor AND it doesn't currently exist 
+                    yield token.actor.update({
+                        [`data.status.is${status}`]: true
+                    });
+                    //Unfortunately because foundry AND this handler made a status we need to do some clean up and delete the second one
+                    setTimeout(() => {
+                        token = canvas.tokens.get(opts._id);
+                        let tokenStatuses = token.actor['effects'].filter(el => el.data.label == status);
+                        if (tokenStatuses.length > 1) {
+                            token.actor.deleteEmbeddedEntity("ActiveEffect", tokenStatuses[0].id);
+                        }
+                    }, 250);
+                }
+                else {
+                    token.actor.update({
+                        [`data.status.is${status}`]: false
+                    });
+                }
+            }));
+        });
         //Status Linking for NPCs
         Hooks.on("updateToken", (scene, tokenDiff, data, diff, userId) => {
             var _a, _b;
@@ -47,7 +90,6 @@ class StatusEffects {
                     return;
                 } //only care if status object is updated
                 let tokenEffects = token.actor['effects'];
-                console.debug("Token Effects", tokenEffects);
                 for (let status of coreStatusList) {
                     if (obj[`is${status}`] == true && !tokenEffects.find(el => el.data.label == status)) {
                         //it's turned to true AND the status doesn't currently exist on the token
@@ -62,11 +104,8 @@ class StatusEffects {
                         });
                     }
                     else if (obj[`is${status}`] == false && tokenEffects.find(el => el.data.label == status)) {
-                        console.debug("Trying to delete the effect");
                         //it's turned off AND there is currently a token effect
-                        console.debug("Token Effects: ", tokenEffects);
                         let effectToDelete = tokenEffects.find(el => el.data.label == status).id;
-                        console.debug("effect to delete", effectToDelete);
                         token.actor.deleteEmbeddedEntity("ActiveEffect", effectToDelete);
                     }
                 }
@@ -110,6 +149,7 @@ class StatusEffects {
             }
             for (let status of coreStatusList) {
                 if (activeEffect.label == status && !actor.data.data.status[`is${status}`]) {
+                    //If the status is the active effect AND it's not currently ON
                     actor.update({
                         [`data.status.is${status}`]: true
                     });

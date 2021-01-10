@@ -7,33 +7,54 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Hooks.on("ready", () => {
+    game.settings.register("swade-toolkit", "enableDragDropActions", {
+        name: game.i18n.localize("Token_Action.Enable_Drag_Drop_Action"),
+        hint: game.i18n.localize('Token_Action.Enable_Drag_Drop_Hint'),
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false,
+    });
+});
 Hooks.on("renderTokenHUD", (tokenHUD, html, opts) => __awaiter(this, void 0, void 0, function* () {
-    //@ts-ignore
-    let currentActor = game.actors.get(opts.actorId);
+    let currentActor = canvas.tokens.get(opts._id).actor;
     const actionsButton = $(`<i id='actionsList' class="control-icon fas fa-gavel swade-hud-actions" title=${game.i18n.localize("SWADE_Actions.Actions")}></i>`);
     //@ts-ignore
     let actionsList = yield renderTemplate('modules/swade-toolkit/templates/actions/ActionsList.hbs', getActionsList(currentActor, Array.from(currentActor.items)));
     actionsButton.append(actionsList);
     html.find(".right").append(actionsButton);
-    //make the thingies drag droppable
-    //@ts-ignore
-    const dragDrop = new DragDrop({
-        dragSelector: ".swade-action",
-        dropSelector: "#board",
-        callbacks: {
-            dragstart: (evt) => __awaiter(this, void 0, void 0, function* () {
-                evt.dataTransfer.setData("text/plain", JSON.stringify(evt.target.dataset));
-            }),
-            drop: handleActionDrop
-        }
+    if (game.settings.get('swade-toolkit', 'enableDragDropActions')) {
+        //make the thingies drag droppable
+        //@ts-ignore
+        const dragDrop = new DragDrop({
+            dragSelector: ".swade-action",
+            dropSelector: "#board",
+            callbacks: {
+                dragstart: (evt) => __awaiter(this, void 0, void 0, function* () {
+                    evt.dataTransfer.setData("text/plain", JSON.stringify(evt.target.dataset));
+                    evt.stopPropagation();
+                }),
+                drop: handleActionDrop
+            }
+        });
+        //@ts-ignore
+        dragDrop.bind(document); //CURRENT KILLS THE ACTOR DROP HANDLER 
+    }
+    //Handle regular clicks as well
+    html.find(".swade-action").on("click", (evt) => {
+        let item = currentActor.items.find(el => el.id == evt.target.dataset.itemId);
+        let actionId = evt.target.dataset.actionId;
+        game.swade.SwadeItem._handleAdditionalActions(item, currentActor, actionId);
     });
-    //@ts-ignore
-    dragDrop.bind(document);
 }));
 function handleActionDrop(evt) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
         let data = JSON.parse(evt.dataTransfer.getData('text/plain'));
+        if (!data.actionId) {
+            return;
+        } //not an action, don't worry about it
         const getTokenAtXY = (clientX, clientY) => {
             let token = undefined;
             let gridSize = game.scenes.active.data['grid'];

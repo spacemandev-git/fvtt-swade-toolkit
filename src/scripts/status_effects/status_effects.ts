@@ -35,6 +35,37 @@ class StatusEffects {
       'Bound',
     ]; 
 
+    //Hack: Add a listener onto the status icons that calls the actor update on the sheet
+    Hooks.on("renderTokenHUD", (tokenHUD: TokenHUD, html:JQuery<HTMLElement>, opts:any) => {
+      let token = canvas.tokens.get(opts._id);
+      if(!token.owner){return;} //only process for the token owner
+      html.find(".effect-control").on("click", async (evt) => {
+        evt.preventDefault();
+        let status = evt.target.title;
+        if(!coreStatusList.includes(status)){return;} //we only care about core statuses
+        let tokenEffects = token.actor['effects'];
+        if(!token.actor.data.data.status[`is${status}`] && !tokenEffects.find(el => el.data.label == status)){
+          //status is FALSE on actor AND it doesn't currently exist 
+          await token.actor.update({
+            [`data.status.is${status}`]: true
+          });
+
+          //Unfortunately because foundry AND this handler made a status we need to do some clean up and delete the second one
+          setTimeout(()=>{
+            token = canvas.tokens.get(opts._id);
+            let tokenStatuses = token.actor['effects'].filter(el => el.data.label == status);
+            if(tokenStatuses.length > 1){
+              token.actor.deleteEmbeddedEntity("ActiveEffect", tokenStatuses[0].id);
+            }
+          }, 250)
+        } else {
+          token.actor.update({
+            [`data.status.is${status}`]: false
+          })
+        }
+      })
+    })
+
     //Status Linking for NPCs
     Hooks.on("updateToken", (scene:Scene, tokenDiff, data, diff, userId) => {
       if(!game.userId == userId || !diff.diff){return;} //diff is used to stop propagation after the first sync
@@ -47,7 +78,6 @@ class StatusEffects {
         let obj = data.actorData?.data?.status;
         if(!obj){return;} //only care if status object is updated
         let tokenEffects = token.actor['effects']
-        console.debug("Token Effects", tokenEffects);
 
         for(let status of coreStatusList){
           if(obj[`is${status}`] == true && !tokenEffects.find(el => el.data.label == status)){
@@ -105,9 +135,10 @@ class StatusEffects {
     //Status Linking for Wildcards
     Hooks.on("createActiveEffect", (actor:Actor, activeEffect:any, opts:any, userId) => {
       if(game.userId != userId){return;}
-      
+
       for(let status of coreStatusList){
         if(activeEffect.label == status && !actor.data.data.status[`is${status}`]){
+          //If the status is the active effect AND it's not currently ON
           actor.update({
             [`data.status.is${status}`]: true
           })

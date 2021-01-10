@@ -22,6 +22,10 @@
   "Macros": {
     "Enable_All_Macros": "Enable Macros (See Macro Directory)"
   },
+  "Token_Action": {
+    "Enable_Drag_Drop_Action": "Enable drag droppable actions.",
+    "Enable_Drag_Drop_Hint": "Overwrites other drop handlers for the board. Does not play well with other modules"
+  },
   "Automation": {
     "Toggle_Automation": "Toggle Automation",
     "Transformers_Button": "Rulesets",
