@@ -19,6 +19,9 @@
     "Accept": "Confirm",
     "Accept2": "Please just patch my actors."
   },
+  "Macros": {
+    "Enable_All_Macros": "Enable Macros (See Macro Directory)"
+  },
   "Automation": {
     "Toggle_Automation": "Toggle Automation",
     "Transformers_Button": "Rulesets",
