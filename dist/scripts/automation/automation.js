@@ -14,8 +14,6 @@ Hooks.on("ready", () => {
     game.automation = new Handler();
     game.automation.library = new TransformerLibrary();
     game.automation.util = new Utility();
-    Hooks.call("swade-toolkit-handler-ready");
-    //Load DefaultTransformers for every Actor
 });
 /**
  * @param token is of type *any* because it's the token data, not the token itself

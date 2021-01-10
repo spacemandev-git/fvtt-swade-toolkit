@@ -39,35 +39,67 @@ class StatusEffects {
     Hooks.on("updateToken", (scene:Scene, tokenDiff, data, diff, userId) => {
       if(!game.userId == userId || !diff.diff){return;} //diff is used to stop propagation after the first sync
       //sync the sheet and token
+      //CAN ONLY DO ONE WAY BINDING
+      // Always do Sheet to Token
+      // Create a separate listener on tokenHUD that updates sheet when token status is clicked
       if(!tokenDiff.actorLink){
         let token:Token = canvas.tokens.get(tokenDiff._id);
-     
-        let effects = tokenDiff.actorData?.effects;
-        /**
-         * CAN ONLY DO ONE WAY BINDING CURRENTLY
-         * Token > Sheet or Sheet > Token (doing both causes infinite loop)
-         * Token > Sheet is preferred because NPCs are quick toggles and you're using the token for them.
-         */
+        let obj = data.actorData?.data?.status;
+        if(!obj){return;} //only care if status object is updated
+        let tokenEffects = token.actor['effects']
+        console.debug("Token Effects", tokenEffects);
 
-        if(effects){
-          //the status effect was applied on the token
-          //source of truth then is the tokendiff.effects
-          //we have to apply it to the actorData  
-          for(let status of coreStatusList){
-            if(effects.find(effect => effect.label == status)){
-              //status is on the token, so make sure it's "true" on the actordata
-              token.actor.update({
-                [`data.status.is${status}`]: true
-              })
-            } else {
-              //status was REMOVED from the token so make sure it's off the actor
-              token.actor.update({
-                [`data.status.is${status}`]: false 
-              })
-            }
+        for(let status of coreStatusList){
+          if(obj[`is${status}`] == true && !tokenEffects.find(el => el.data.label == status)){
+            //it's turned to true AND the status doesn't currently exist on the token
+            token.actor.createEmbeddedEntity('ActiveEffect', {
+              label: status,
+              icon: `systems/swade/assets/icons/status/status_${status.toLowerCase()}.svg`,
+              flags: {
+                core: {
+                  statusId: status.toLowerCase()
+                }
+              } 
+            })
+          } else if (obj[`is${status}`] == false && tokenEffects.find(el => el.data.label == status)){
+            //it's turned off AND there is currently a token effect
+            let effectToDelete = tokenEffects.find(el => el.data.label == status).id
+            token.actor.deleteEmbeddedEntity("ActiveEffect", effectToDelete);
           }
         }
       }
+
+      /*
+        if(!tokenDiff.actorLink){
+          let token:Token = canvas.tokens.get(tokenDiff._id);
+      
+          let effects = tokenDiff.actorData?.effects;
+          /**
+           * CAN ONLY DO ONE WAY BINDING CURRENTLY
+           * Token > Sheet or Sheet > Token (doing both causes infinite loop)
+           * Token > Sheet is preferred because NPCs are quick toggles and you're using the token for them.
+           */
+          /*
+          if(effects){
+            //the status effect was applied on the token
+            //source of truth then is the tokendiff.effects
+            //we have to apply it to the actorData  
+            for(let status of coreStatusList){
+              if(effects.find(effect => effect.label == status)){
+                //status is on the token, so make sure it's "true" on the actordata
+                token.actor.update({
+                  [`data.status.is${status}`]: true
+                })
+              } else {
+                //status was REMOVED from the token so make sure it's off the actor
+                token.actor.update({
+                  [`data.status.is${status}`]: false 
+                })
+              }
+            }
+          }
+        }
+      */
     })
 
     //Status Linking for Wildcards
@@ -75,7 +107,7 @@ class StatusEffects {
       if(game.userId != userId){return;}
       
       for(let status of coreStatusList){
-        if(activeEffect.label == status){
+        if(activeEffect.label == status && !actor.data.data.status[`is${status}`]){
           actor.update({
             [`data.status.is${status}`]: true
           })
@@ -87,7 +119,7 @@ class StatusEffects {
       if(game.userId != userId){return;}
       
       for(let status of coreStatusList){
-        if(activeEffect.label == status){
+        if(activeEffect.label == status && actor.data.data.status[`is${status}`]){
           actor.update({
             [`data.status.is${status}`]: false
           })
