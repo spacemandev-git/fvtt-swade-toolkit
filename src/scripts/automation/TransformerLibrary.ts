@@ -7,7 +7,7 @@ Hooks.on("ready", ()=>{
   "Deleting" will work when it's a Transformer that's been added as a user action
   */
   game.settings.registerMenu("swade-toolkit", "handler-menu", {
-    name: JSON.stringify(game.i18n.localize("Automation.Automation_Text")).replace("\"", ""),
+    name: game.i18n.localize("Automation.Automation_Rulesets"),
     label: game.i18n.localize("Automation.Transformers_Button"),
     hint: game.i18n.localize("Automation.Transformers_Hint"),
     type: TransformerSettings,
@@ -21,7 +21,7 @@ Hooks.on("ready", ()=>{
     type: Object,
     default: {},
     onChange: (value: any) => {
-      console.log("SWADE Toolkit | Transformer Templates Updated", value)
+      console.debug("SWADE Toolkit | Transformer Templates Updated", value)
     }
   })
 })
@@ -38,7 +38,7 @@ class TransformerSettings extends FormApplication{
   static get defaultOptions(){
     return mergeObject(super.defaultOptions, {
       id: "swade-toolkit-transformer-settings",
-      title: JSON.stringify(game.i18n.localize("Automation.Automation_Text")).replace("\"", ""),
+      title: JSON.stringify(game.i18n.localize("Automation.Automation_Text")).replace(/\"/g, ""),
       template: 'modules/swade-toolkit/templates/automation/TransformerSettings.hbs',
       width: 400
     })
@@ -49,7 +49,7 @@ class TransformerSettings extends FormApplication{
       new FilePicker({
         callback : async (path:string) => {
           let importRuleset = await (await fetch(path)).json();
-          console.log(`SWADE Toolkit | Importing Ruleset ${importRuleset}`);
+          console.log(`SWADE Toolkit | Ruleset ${importRuleset}`);
           for(let transformerList of Object.values(importRuleset)){
             game.automation.library.addTransformerTemplates(transformerList);
           }

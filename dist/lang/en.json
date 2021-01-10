@@ -20,7 +20,7 @@
     "Accept2": "Please just patch my actors."
   },
   "Automation": {
-    "Automation_Text": "Automation",
+    "Toggle_Automation": "Toggle Automation",
     "Transformers_Button": "Rulesets",
     "Transformers_Hint": "Import/View your rulesets.",
     "Info": "Info",
@@ -45,12 +45,16 @@
     "View_Rulesets": "View installed rulesets",
     "Version": "Version",
     "Error_Empty_Transformer": "Cannot add an empty transformer to the array.",
-    "Automation_Setting_Hint": "Requires refresh to toggle on/off"
+    "Automation_Setting_Hint": "Requires refresh to toggle on/off",
+    "Automation_Rulesets": "Rulesets"
   },
   "SWADE_Actions": {
     "Actions": "Actions"
   },
   "Toolkit_Chat": {
     "Rolled": "rolled"
+  },
+  "Status_Effects": {
+    "Link_Status_Effects": "Link Status Effects"
   }
 }

@@ -31,6 +31,7 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, opts) => __awaiter(this, void 0, voi
     dragDrop.bind(document);
 }));
 function handleActionDrop(evt) {
+    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         let data = JSON.parse(evt.dataTransfer.getData('text/plain'));
         const getTokenAtXY = (clientX, clientY) => {
@@ -59,7 +60,10 @@ function handleActionDrop(evt) {
         }
         //handle the action
         //let actor = game.actors.get(data.actorId);
-        let actor = canvas.tokens.controlled[0].actor; //otherwise it'll always grab from the unlinked default sheet and not the specific token sheet
+        let actor = (_a = canvas.tokens.controlled[0]) === null || _a === void 0 ? void 0 : _a.actor; //otherwise it'll always grab from the unlinked default sheet and not the specific token sheet
+        if (!actor) {
+            return;
+        } //no actor is selected so we don't have an origin 
         let item = actor.items.find(el => el.id == data.itemId);
         console.debug("SWADE Toolkit | Firing Action", item, actor, data.actionId);
         yield game.swade.SwadeItem._handleAdditionalActions(item, actor, data.actionId);

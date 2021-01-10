@@ -25,19 +25,25 @@ Hooks.on("deleteToken", (scene, token, obj, userId) => __awaiter(void 0, void 0,
         return;
     } //only process this on the machine that made the token
     //Delete all the transformers related to this token
-    for (let transformer of game.automation.getTransformersByEntityId('Token', token.id, false)) {
-        yield game.automation.removeTransformer(transformer.trigger, transformer.name);
+    let eTransformers = game.automation.getTransformersByEntityId('Token', token.id, false);
+    for (let key of Object.keys(eTransformers)) {
+        for (let transformer of eTransformers[key]) {
+            yield game.automation.removeTransformer(transformer.trigger, transformer.name);
+        }
     }
 }));
-Hooks.on("deleteActor", (actor, obj, userId) => {
+Hooks.on("deleteActor", (actor, obj, userId) => __awaiter(void 0, void 0, void 0, function* () {
     if (game.userId != userId) {
         return;
     } //only process this on the machine that made the token
     //Delete all the transformers related to this token
-    for (let transformer of game.automation.getTransformersByEntityId('Actor', actor.id, false)) {
-        game.automation.removeTransformer(transformer.trigger, transformer.name);
+    let eTransformers = game.automation.getTransformersByEntityId('Actor', actor.id, false);
+    for (let key of Object.keys(eTransformers)) {
+        for (let transformer of eTransformers[key]) {
+            yield game.automation.removeTransformer(transformer.trigger, transformer.name);
+        }
     }
-});
+}));
 //Meant to contain helper functions to be found in game.automation.util
 class Utility {
     constructor() {

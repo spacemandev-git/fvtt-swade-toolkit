@@ -106,7 +106,7 @@ export class Handler {
             }
         });
         game.settings.register('swade-toolkit', 'automation', {
-            name: JSON.stringify(game.i18n.localize("Automation.Automation_Text")).replace("\"", ""),
+            name: game.i18n.localize("Automation.Toggle_Automation"),
             hint: game.i18n.localize("Automation.Automation_Setting_Hint"),
             scope: "world",
             config: true,
@@ -114,6 +114,9 @@ export class Handler {
             default: false,
             onChange: (value) => {
                 console.log("SWADE Toolkit | Automation:", value);
+                if (value) {
+                    this.startListeners();
+                }
             }
         });
     }

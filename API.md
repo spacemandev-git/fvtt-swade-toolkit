@@ -61,7 +61,6 @@ interface ITransformer {
 // Target Parry/Toughness
 // Gritty Damage
 // ReRoll w/ Benny
-// Auto track ammo and pp
 // Showing hit/raise/ and apply wounds
 
 //SWADE Tools

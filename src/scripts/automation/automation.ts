@@ -17,16 +17,22 @@ Hooks.on("ready", () => {
 Hooks.on("deleteToken", async (scene:Scene, token:Token['data'], obj:any, userId: string) => {
   if(game.userId != userId){return;} //only process this on the machine that made the token
   //Delete all the transformers related to this token
-  for(let transformer of game.automation.getTransformersByEntityId('Token', token.id, false)){
-    await game.automation.removeTransformer(transformer.trigger, transformer.name);
+  let eTransformers = game.automation.getTransformersByEntityId('Token', token.id, false);
+  for(let key of Object.keys(eTransformers)){
+    for(let transformer of eTransformers[key]){
+      await game.automation.removeTransformer(transformer.trigger, transformer.name);
+    }
   }
 })
 
-Hooks.on("deleteActor", (actor:Actor, obj:any, userId: string) => {
+Hooks.on("deleteActor", async (actor:Actor, obj:any, userId: string) => {
   if(game.userId != userId){return;} //only process this on the machine that made the token
   //Delete all the transformers related to this token
-  for(let transformer of game.automation.getTransformersByEntityId('Actor', actor.id, false)){
-    game.automation.removeTransformer(transformer.trigger, transformer.name);
+  let eTransformers = game.automation.getTransformersByEntityId('Actor', actor.id, false);
+  for(let key of Object.keys(eTransformers)){
+    for(let transformer of eTransformers[key]){
+      await game.automation.removeTransformer(transformer.trigger, transformer.name);
+    }
   }
 })
 
