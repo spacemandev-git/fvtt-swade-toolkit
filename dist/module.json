@@ -1,9 +1,9 @@
 {
   "name": "swade-toolkit",
   "title": "SWADE Toolkit",
-  "description": "A collection of useful small improvements for SWADE System",
-  "author": "spacemandev#6256",
-  "version": "1.0.2",
+  "description": "<p>A collection of macros and automation API for the SWADE system. If you find this module useful, please consider contributing to the maintenance fund at <a href='ko-fi.com/spacemandev'>ko-fi.com/spacemandev</a> </p>",
+  "author": "spacemandev (spacemandev#6256)",
+  "version": "1.1.0",
   "minimumCoreVersion": "0.6.0",
   "compatibleCoreVersion": "0.7.9",
   "url": "",
@@ -22,10 +22,13 @@
   ],
   "media": [],
   "esmodules": [
-    "scripts/swade-toolkit.js"
+    "scripts/macros.js",
+    "scripts/status_effects/status_effects.js",
+    "scripts/active_effects/active_effects.js"
   ],
   "styles": [
-    "styles/swade-toolkit.css"
+    "styles/swade-toolkit.css",
+    "styles/chat/swade-toolkit-chat.css"
   ],
   "languages": [{
     "lang": "en",

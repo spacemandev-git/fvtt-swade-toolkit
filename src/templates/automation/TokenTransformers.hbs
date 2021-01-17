@@ -1,0 +1,75 @@
+<style>
+#tokenTransformerMenu{
+  display:flex;
+  flex-direction: column;
+  background: rgba(0,0.0,0.6);
+  height: 300px;
+  width: 300px;
+  position: fixed;
+  bottom: 60px;
+  left: 800px;
+  box-shadow: 0 0 15px #000;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+#tokenTransformerMenu .addTransformer{
+  flex:1;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+#tokenTransformerMenu .transformerList{
+  flex: 9;
+  display:flex;
+  flex-direction: column;
+  overflow: scroll;
+  font-size: 12px;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#tokenTransformerMenu .transformerRow{
+  display:flex;
+  padding: 5px;
+}
+
+#tokenTransformerMenu .wildcard-test{
+  color: yellow
+}
+</style>
+
+<div id="tokenTransformerMenu">
+  <div class="addTransformer">
+    <i id="addTransformerButton" class="fas fa-plus"></i>
+  </div>
+  <div class="transformerList">
+    {{#each actor}}
+      {{#each this}}
+      <div class="transformerRow" id="{{@../key}}-{{this.name}}-row">
+        <span style="flex:7" {{#eq this.entityID "*"}}class="wildcard-test"{{/eq}}><i class="fas fa-user"></i> {{@../key}}: {{this.name}}</span>
+        <i style="flex:1" class="fa fa-question" title="{{localize 'Automation.Info'}}" id="actor-info-{{@../key}}-{{this.name}}"></i>
+        {{#if this.isActive}}
+        <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'Automation.Disable'}}" id="actor-active-{{@../key}}-{{this.name}}"></i>
+        {{else}}
+        <i style="flex:1;color:#CCC" class="fa fa-power-off" title="{{localize 'Automation.Enable'}}" id="actor-active-{{@../key}}-{{this.name}}"></i>
+        {{/if}}
+        <i style="flex:1" class="fa fa-trash" title="{{localize 'Automation.Delete'}}" id="actor-delete-{{@../key}}-{{this.name}}"></i>
+      </div>
+      {{/each}}
+    {{/each}}
+    {{#each token}}
+      {{#each this}}
+      <div class="transformerRow" id="{{@../key}}-{{this.name}}-row">
+        <span style="flex:7" {{#eq this.entityID "*"}}class="wildcard-test"{{/eq}}>{{@../key}}: {{this.name}}</span>
+        <i style="flex:1" class="fa fa-question" title="{{localize 'Automation.Info'}}" id="token-info-{{@../key}}-{{this.name}}"></i>
+        {{#if this.isActive}}
+        <i style="flex:1;color:lime" class="fa fa-power-off" title="{{localize 'Automation.Disable'}}" id="token-active-{{@../key}}-{{this.name}}"></i>
+        {{else}}
+        <i style="flex:1;color:#CCC" class="fa fa-power-off" title="{{localize 'Automation.Enable'}}" id="token-active-{{@../key}}-{{this.name}}"></i>
+        {{/if}}
+        <i style="flex:1" class="fa fa-trash" title="{{localize 'Automation.Delete'}}" id="token-delete-{{@../key}}-{{this.name}}"></i>
+      </div>
+      {{/each}}
+    {{/each}}
+  </div>
+</div>

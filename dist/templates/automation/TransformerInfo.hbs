@@ -1,0 +1,64 @@
+<style>
+  .transformer-info div{
+    padding:5px;
+  }
+
+  .transformer-info .info-row{
+    display:flex
+  }
+
+  .transformer-info .info-row .title{
+    flex:3
+  }
+
+  .transformer-info .info-row .value{
+    flex: 2
+  }
+</style>
+{{log this}}
+<div class="transformer-info">
+  <h1>{{name}}</h1>
+  <div>
+  <div style="display:flex; flex-direction:column">
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Trigger"}}</p>
+      <p class="value">{{trigger}}</p>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Enable"}}</p>
+      {{#if isActive}} 
+      <input class="value" type="checkbox" checked disabled/>
+      {{else}}
+      <input class="value" type="checkbox" disabled/>
+      {{/if}}
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Version"}}</p>
+      <p class="value">{{version}}</p>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Entity_ID"}}</p>
+      <p class="value">{{entityID}}</p>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Entity_Type"}}</p>
+      <p class="value">{{entityType}}</p>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Duration"}}</p>
+      <p class="value">{{duration}}</p>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Execute_Order"}}</p>
+      <p class="value">{{execOrderNum}}</p>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Description"}}</p>
+      <textarea class="value" disabled>{{description}}</textarea>
+    </div>
+    <div class="info-row">
+      <p class="title">{{localize "Automation.Transformer_Function"}}</p>
+      <textarea class="value" disabled>{{transformer}}</textarea>
+    </div>
+  </div>
+</div>

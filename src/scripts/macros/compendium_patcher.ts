@@ -10,7 +10,7 @@ async function compendium_patcher(){
       return mergeObject(super.defaultOptions, {
         id:"compendium_patcher_form",
         title:l("Compendium_Patcher"),
-        template: "modules/swade-toolkit/templates/compendium_patcher.hbs",
+        template: "modules/swade-toolkit/templates/macros/compendium_patcher.hbs",
         width: 400,
         closeOnSubmit: false  
       })

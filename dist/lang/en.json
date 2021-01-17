@@ -18,5 +18,63 @@
     "Confirm2": "ARE YOU SURE YOU'RE SURE?",
     "Accept": "Confirm",
     "Accept2": "Please just patch my actors."
+  },
+  "Macros": {
+    "Enable_All_Macros": "Enable Macros (See Macro Directory)"
+  },
+  "Token_Action": {
+    "Enable_Drag_Drop_Action": "Enable drag droppable actions.",
+    "Enable_Drag_Drop_Hint": "Overwrites other drop handlers for the board. Does not play well with other modules. Requires refresh."
+  },
+  "Automation": {
+    "Toggle_Automation": "Toggle Automation",
+    "Transformers_Button": "Rulesets",
+    "Transformers_Hint": "Import/View your rulesets.",
+    "Info": "Info",
+    "Disable": "Disable",
+    "Enable": "Enable",
+    "Delete": "Delete",
+    "Description": "Description",
+    "Trigger": "Trigger",
+    "Function": "Function",
+    "Execute_Order": "Execute Order",
+    "Close":"Close",
+    "Add_Transformer": "Add Transformer",
+    "Add_Transformer_To_Token": "+ Token",
+    "Add_Transformer_To_Actor": "+ Actor",
+    "Transformer_Name": "Transformer Name",
+    "Duration": "Duration (in seconds)",
+    "Entity_ID": "Entity ID",
+    "Entity_Type": "Entity Type",
+    "Transformer_Function": "Transformer Function",
+    "Load_Transformer_Template": "Load transformer template",
+    "Import_Ruleset": "Import JSON ruleset",
+    "View_Rulesets": "View installed rulesets",
+    "Version": "Version",
+    "Error_Empty_Transformer": "Cannot add an empty transformer to the array.",
+    "Automation_Setting_Hint": "Requires refresh to toggle on/off",
+    "Automation_Rulesets": "Rulesets"
+  },
+  "SWADE_Actions": {
+    "Actions": "Actions"
+  },
+  "Toolkit_Chat": {
+    "Spend_Benny": "Spend Benny to Reroll",
+    "Modifiers": "Modifiers",
+    "Target_Number": "Target Number",
+    "Ammo": "Ammo"
+  },
+  "Status_Effects": {
+    "Link_Status_Effects": "Link Status Effects",
+    "SWADE_Shaken": "Shaken",
+    "SWADE_Distracted": "Distracted",
+    "SWADE_Vulnerable": "Vulnerable",
+    "SWADE_Stunned": "Stunned",
+    "SWADE_Entangled": "Entangled",
+    "SWADE_Bound": "Bound"
+  },
+  "Active_Effects": {
+    "Enable_Skill_Active_Effects": "Enable Skill Active Effects (d!Skillname, m!Skillname)",
+    "Die_Must_Be_Even": "Die increment/decrement must be an even number!"
   }
 }

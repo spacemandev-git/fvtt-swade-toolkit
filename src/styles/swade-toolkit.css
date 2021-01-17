@@ -1,0 +1,38 @@
+#tokenTransformersButton{
+  position:fixed;
+  left: 800px;
+  bottom: 10px;
+  width: 40px;
+  height: 50px;
+  color: #CCC;
+}
+
+.swade-hud-actions{
+  position: relative;
+}
+
+.swade-hud-actions .swade-toolkit-actionslist{
+  display:none;
+  left:100%;
+  top:0px;
+  position: absolute;
+}
+
+.swade-hud-actions:hover .swade-toolkit-actionslist{
+  background-color: #696969;
+  display: block;
+}
+
+.swade-hud-actions .swade-toolkit-actionslist .actions-grid {
+  margin: 5px;
+  display:grid;
+  grid-template-columns: repeat(4, 40px);
+  grid-auto-rows: auto;
+  gap: 5px 5px;
+}
+
+.swade-action{
+  width: 40px;
+  height: 40px;
+  background-size: contain;
+}

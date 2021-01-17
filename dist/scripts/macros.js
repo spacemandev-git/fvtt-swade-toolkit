@@ -10,7 +10,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Hooks.on("ready", () => __awaiter(this, void 0, void 0, function* () {
     //Check if Macros with given name exist, if not, create them
     let macros = (yield FilePicker.browse("data", "modules/swade-toolkit/scripts/macros/")).files;
-    console.log("SWADE TOOLKIT| Macros Found: ", macros);
+    //console.debug("SWADE TOOLKIT | Macros Found: ", macros)
+    game.settings.register('swade-toolkit', 'enable-macros', {
+        name: game.i18n.localize("Macros.Enable_All_Macros"),
+        type: Boolean,
+        default: false,
+        config: true,
+        onChange: (toggle) => {
+            for (let macro of macros) {
+                let name = macro.split("/").pop().split('.js')[0];
+                game.settings.set('swade-toolkit', `${name}-enabled`, toggle);
+            }
+        }
+    });
     for (let macroName of macros) {
         let name = macroName.split("/").pop().split('.js')[0];
         game.settings.register("swade-toolkit", `${name}-enabled`, {
@@ -18,7 +30,7 @@ Hooks.on("ready", () => __awaiter(this, void 0, void 0, function* () {
             label: `${name} Enabled`,
             type: Boolean,
             default: false,
-            config: true,
+            config: false,
             onChange: (newSetting) => {
                 console.log(newSetting);
                 location.reload();
