@@ -34,7 +34,6 @@ class ActiveEffects {
             if (!effect.changes.find(el => (el.key.includes("d!") || el.key.includes("m!")))) {
                 return;
             } //only process the AEs with d! and m!
-            console.debug("Processing:", actor, effect, disabled);
             for (let change of effect.changes) {
                 if (change.key.startsWith("d!")) {
                     if (change.value % 2 != 0) {
@@ -53,7 +52,16 @@ class ActiveEffects {
                         //AE Turned Off
                         let newSkill = duplicate(skill);
                         newSkill.data.die.sides -= change.value;
-                        newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].filter(el => el != effect._id);
+                        if (newSkill.flags['swade-toolkit']['active-effects']) {
+                            newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                        }
+                        else {
+                            newSkill.flags = {
+                                "swade-toolkit": {
+                                    "active-effects": [effect._id]
+                                }
+                            };
+                        }
                         yield actor.deleteOwnedItem(skill.id);
                         actor.createOwnedItem(newSkill);
                     }
@@ -61,7 +69,16 @@ class ActiveEffects {
                         //AE Turned On
                         let newSkill = duplicate(skill);
                         newSkill.data.die.sides += change.value;
-                        newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                        if (newSkill.flags['swade-toolkit']['active-effects']) {
+                            newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                        }
+                        else {
+                            newSkill.flags = {
+                                "swade-toolkit": {
+                                    "active-effects": [effect._id]
+                                }
+                            };
+                        }
                         yield actor.deleteOwnedItem(skill.id);
                         actor.createOwnedItem(newSkill);
                     }
@@ -80,7 +97,16 @@ class ActiveEffects {
                         let newSkill = duplicate(skill);
                         let mod = skill.data.data.die.modifier === "" ? 0 : parseInt(skill.data.data.die.modifier);
                         newSkill.data.die.modifier = (mod - change.value).toString();
-                        newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].filter(el => el != effect._id);
+                        if (newSkill.flags['swade-toolkit']['active-effects']) {
+                            newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                        }
+                        else {
+                            newSkill.flags = {
+                                "swade-toolkit": {
+                                    "active-effects": [effect._id]
+                                }
+                            };
+                        }
                         yield actor.deleteOwnedItem(skill.id);
                         actor.createOwnedItem(newSkill);
                     }
@@ -94,7 +120,16 @@ class ActiveEffects {
                         let mod = skill.data.data.die.modifier == "" ? 0 : parseInt(skill.data.data.die.modifier);
                         console.debug("Mod: ", mod);
                         newSkill.data.die.modifier = (mod + change.value).toString();
-                        newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                        if (newSkill.flags['swade-toolkit']['active-effects']) {
+                            newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                        }
+                        else {
+                            newSkill.flags = {
+                                "swade-toolkit": {
+                                    "active-effects": [effect._id]
+                                }
+                            };
+                        }
                         yield actor.deleteOwnedItem(skill.id);
                         actor.createOwnedItem(newSkill);
                     }
