@@ -42,11 +42,11 @@ Hooks.on("renderTokenHUD", (tokenHUD, html, opts) => __awaiter(this, void 0, voi
         dragDrop.bind(document); //CURRENT KILLS THE ACTOR DROP HANDLER 
     }
     //Handle regular clicks as well
-    html.find(".swade-action").on("click", (evt) => {
+    html.find(".swade-action").on("click", (evt) => __awaiter(this, void 0, void 0, function* () {
         let item = currentActor.items.find(el => el.id == evt.target.dataset.itemId);
         let actionId = evt.target.dataset.actionId;
-        game.swade.SwadeItem._handleAdditionalActions(item, currentActor, actionId);
-    });
+        yield game.swade.itemChatCardHelper.handleAction(item, currentActor, actionId);
+    }));
 }));
 function handleActionDrop(evt) {
     var _a;
@@ -87,13 +87,38 @@ function handleActionDrop(evt) {
         } //no actor is selected so we don't have an origin 
         let item = actor.items.find(el => el.id == data.itemId);
         console.debug("SWADE Toolkit | Firing Action", item, actor, data.actionId);
-        yield game.swade.SwadeItem._handleAdditionalActions(item, actor, data.actionId);
+        yield game.swade.itemChatCardHelper.handleAction(item, actor, data.actionId);
     });
 }
 function getActionsList(actor, actorItems) {
     let actionsList = [];
+    //basic damage and skill rolls
     for (let item of actorItems) {
         if (item.data.data.actions && item.data.data.equipped) {
+            //basic skill and damage roll for the weapon
+            actionsList.push({
+                name: item.name + ":" + item.data.data.actions.skill,
+                img: item.img,
+                itemID: item.id,
+                actorID: actor.id,
+                actionID: "formula"
+            });
+            actionsList.push({
+                name: item.name + ":Damage",
+                img: item.img,
+                itemID: item.id,
+                actorID: actor.id,
+                actionID: "damage"
+            });
+            if (game.settings.get('swade', 'ammoManagement')) {
+                actionsList.push({
+                    name: item.name + ":Reload",
+                    img: item.img,
+                    itemID: item.id,
+                    actorID: actor.id,
+                    actionID: 'reload'
+                });
+            }
             let itemActions = item.data.data.actions.additional;
             for (let key of Object.keys(itemActions)) {
                 let action = itemActions[key];

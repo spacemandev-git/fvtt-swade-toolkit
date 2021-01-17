@@ -22,8 +22,8 @@ export class Handler{
 
   private startListeners(){
     if(game.settings.get("swade-toolkit", "automation") == false){return;} // don't start listeners if there's automation isn't on.
-    Hooks.on("swadeAction", async (actor: Actor, item:Item, actionID: string, roll:Roll, userId:string) => {
-      console.log("Called swadeAction:", actor, item, actionID, roll, userId);
+    Hooks.on("swadeAction", async (actor: Actor, item:Item, actionID: string, roll:Roll | Promise<Roll>, userId:string) => {
+      console.log("Called swadeAction:", actor, item, actionID, await roll, userId);
       if(!actor.owner || !roll){
         //Only process the hook on the machine that the owns the Actor
         //don't process if roll is null (user canceled action)
@@ -40,13 +40,11 @@ export class Handler{
       //We're going to abuse the roll object here a little bit by stuffing a "modifiers" list in there
       //Ideally every transformer will append this list to include the modifiers they added and the description of them
       roll['modifiers'] = [];
-
-
-      
+     
       roll['chatMessage'] = undefined;
       
       let transformers = this.getTransformersByEntityId("Actor", actor.id)['ItemAction']
-      await this.processTransformers(transformers, {actor: actor, item: item, actionID: actionID, roll:roll, userId: userId, token:undefined, haltExecution:false})
+      await this.processTransformers(transformers, {actor: actor, item: item, actionID: actionID, roll:await roll, userId: userId, token:undefined, haltExecution:false})
 
       let actorTokens:Token[] = canvas.tokens.placeables.filter((token:Token) => token.actor.id == actor.id)
       if(actorTokens.length == 0){

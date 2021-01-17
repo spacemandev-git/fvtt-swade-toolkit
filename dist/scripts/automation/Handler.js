@@ -40,7 +40,7 @@ export class Handler {
             return;
         } // don't start listeners if there's automation isn't on.
         Hooks.on("swadeAction", (actor, item, actionID, roll, userId) => __awaiter(this, void 0, void 0, function* () {
-            console.log("Called swadeAction:", actor, item, actionID, roll, userId);
+            console.log("Called swadeAction:", actor, item, actionID, yield roll, userId);
             if (!actor.owner || !roll) {
                 //Only process the hook on the machine that the owns the Actor
                 //don't process if roll is null (user canceled action)
@@ -57,7 +57,7 @@ export class Handler {
             roll['modifiers'] = [];
             roll['chatMessage'] = undefined;
             let transformers = this.getTransformersByEntityId("Actor", actor.id)['ItemAction'];
-            yield this.processTransformers(transformers, { actor: actor, item: item, actionID: actionID, roll: roll, userId: userId, token: undefined, haltExecution: false });
+            yield this.processTransformers(transformers, { actor: actor, item: item, actionID: actionID, roll: yield roll, userId: userId, token: undefined, haltExecution: false });
             let actorTokens = canvas.tokens.placeables.filter((token) => token.actor.id == actor.id);
             if (actorTokens.length == 0) {
                 //There are no tokens
