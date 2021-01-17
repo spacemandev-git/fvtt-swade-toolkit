@@ -9,4 +9,3 @@ export interface SwadeAction{
   rof?: number, 
   shotsUsed?:number,
 }
-
