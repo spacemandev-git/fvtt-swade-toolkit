@@ -59,7 +59,10 @@
     "Actions": "Actions"
   },
   "Toolkit_Chat": {
-    "Rolled": "rolled"
+    "Spend_Benny": "Spend Benny to Reroll",
+    "Modifiers": "Modifiers",
+    "Target_Number": "Target Number",
+    "Ammo": "Ammo"
   },
   "Status_Effects": {
     "Link_Status_Effects": "Link Status Effects",

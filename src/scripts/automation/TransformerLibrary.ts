@@ -64,6 +64,10 @@ class TransformerSettings extends FormApplication{
 }
 
 export class TransformerLibrary{
+  constructor(){
+    this.resetTemplates(); /// ONLY FOR DEBUG REMOVE FOR PRODUCTION!!!
+  }
+
   public async addTransformerTemplates(newTemplates:ITransformer[]){
     let currentTemplates = game.settings.get("swade-toolkit", "templates")
     for(let newTemplate of newTemplates){
@@ -139,7 +143,11 @@ export class TransformerLibrary{
 
         args.roll['chatMessage'] = await ChatMessage.create({
           speaker: speaker,
-          content: await renderTemplate('modules/swade-toolkit/templates/chat/SkillRoll.hbs', {})
+          content: await renderTemplate('modules/swade-toolkit/templates/chat/SkillRoll.hbs', {
+            actor: args.actor,
+            item: args.item,
+            roll: args.roll,
+          })
         })
 
         return args;

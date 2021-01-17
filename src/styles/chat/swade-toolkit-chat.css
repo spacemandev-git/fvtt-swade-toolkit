@@ -1,0 +1,49 @@
+.SkillActionCC{
+  padding: 3%;
+}
+
+.SkillActionCC .chat-header-box{
+  
+}
+
+.SkillActionCC .chat-header-img{
+  
+}
+
+.SkillActionCC .chat-header-text{
+  
+}
+
+.SkillActionCC .chat-body-buttons{
+  display:flex;
+  flex-direction: column;
+}
+
+.SkillActionCC .chat-body-buttons .roll-number{
+  margin-top:5px;
+}
+
+.SkillActionCC .chat-body-buttons .roll-result{
+  margin-top:5px;
+}
+
+.SkillActionCC .chat-body-buttons .spend-benny{
+  margin-top:5px;
+}
+
+.SkillActionCC .chat-body-buttons .modifiers-box{
+  margin-top:5px;
+}
+
+.SkillActionCC .action-footer{
+  display:flex;
+  flex-direction: row;
+}
+
+.hidden{
+  display:none
+}
+
+.shown{
+  display:block;
+}

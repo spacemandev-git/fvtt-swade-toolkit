@@ -1,0 +1,41 @@
+<!--
+  actor:Actor
+  item: Item
+  action: action object
+  roll: Roll
+-->
+<div class="SkillActionCC">
+  <div class="chat-header-box">
+    <div class="chat-header-img">
+      <img src="{{item.img}}"></img>
+    </div>
+    <div class="chat-header-text">
+      <p>Roll against <b>Target</b> with <b>Gun</b> at -3</p>
+    </div>
+  </div>
+  <div class="chat-body-buttons">
+    <button class="roll-number">10</button>
+    <div class="dice-tooltip hidden">
+      <section class="tooltip-part">
+
+      </section>
+    </div>
+    <button class="roll-result">Hit</button>
+    <button class="spend-benny">{{localize "Toolkit_Chat.Spend_Benny"}}</button>
+    <button class="modifiers-box">{{localize "Toolkit_Chat.Modifiers"}}</button>
+  </div>
+  <hr>
+  <div class="action-footer">
+    <div style="flex:1"></div>
+    <div style="flex:1" title="{{localize "Toolkit_Chat.Target_Number"}}">
+      <i class="fas fa-bullseye"></i> <span>4</span>
+    </div>
+    <div style="flex:1" title="{{localize "Toolkit_Chat.Ammo"}}">
+      <i class="fas fa-ruler-vertical"></i> <span>5/5</span>
+    </div>
+    <div style="flex:1" title="{{localize "Toolkit_Chat.Modifiers"}}">
+      <i class="fas fa-calculator"></i> <span>5</span>
+    </div>
+    <div style="flex:1"></div>
+  </div>
+</div>
