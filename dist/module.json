@@ -26,8 +26,6 @@
   "media": [],
   "esmodules": [
     "scripts/macros.js",
-    "scripts/automation/automation.js",
-    "scripts/automation/transformerUI.js",
     "scripts/actions/tokenactions.js",
     "scripts/status_effects/status_effects.js",
     "scripts/active_effects/active_effects.js"
