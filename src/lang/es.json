@@ -1,1 +1,31 @@
-{}
+{
+    "NPC_Randomizer": {
+        "ActorTemplate": "Plantilla de Actor",
+        "PackNames": "Nombres de Compendio",
+        "BuildActorButton": "Generar Actor",
+        "NPC_Randomizer": "Aleatorizar PNJ",
+        "ActorName": "Nuevo nombre de Actor"
+    },
+    "Compendium_Patcher": {
+        "Compendium_Patcher": "Parcheador de Compendio",
+        "PackNames": "Nombres de Compendio",
+        "PatchWith": "Parchear con",
+        "Patch": "¡Parchear!",
+        "Confirm2": "¿ESTAS SEGURO SEGURO SEGURO?",
+        "ConfirmHelp": "Acepto que esta acción sobreescribirá los datos de los Actores con nuevos elementos y PERDERÉ los elementos previos."
+    },
+    "Macros": {
+        "Enable_All_Macros": "Habilitar Macros (mira la carpeta de Macros)"
+    },
+    "Automation": {
+        "Toggle_Automation": "Habilitar/Deshabilitar automatización",
+        "Info": "Info",
+        "Disable": "Deshabilitar",
+        "Enable": "Habilitar",
+        "Delete": "Borrar",
+        "Description": "Descripción"
+    },
+    "Token_Action": {
+        "Enable_Drag_Drop_Action": "Habilitar acciones de arrastrar y soltar."
+    }
+}
