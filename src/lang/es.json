@@ -4,7 +4,8 @@
         "PackNames": "Nombres de Compendio",
         "BuildActorButton": "Generar Actor",
         "NPC_Randomizer": "Aleatorizar PNJ",
-        "ActorName": "Nuevo nombre de Actor"
+        "ActorName": "Nuevo nombre de Actor",
+        "DrawTimes": "Escoge X veces"
     },
     "Compendium_Patcher": {
         "Compendium_Patcher": "Parcheador de Compendio",
@@ -12,7 +13,11 @@
         "PatchWith": "Parchear con",
         "Patch": "¡Parchear!",
         "Confirm2": "¿ESTAS SEGURO SEGURO SEGURO?",
-        "ConfirmHelp": "Acepto que esta acción sobreescribirá los datos de los Actores con nuevos elementos y PERDERÉ los elementos previos."
+        "ConfirmHelp": "Acepto que esta acción sobreescribirá los datos de los Actores con nuevos elementos y PERDERÉ los elementos previos.",
+        "ActorFolder": "Carpeta de actor que necesita ser parcheada",
+        "Confirm": "Confirmar",
+        "Accept": "Confirmar",
+        "Accept2": "Por favor, parchea sólo mis actores."
     },
     "Macros": {
         "Enable_All_Macros": "Habilitar Macros (mira la carpeta de Macros)"
@@ -23,9 +28,53 @@
         "Disable": "Deshabilitar",
         "Enable": "Habilitar",
         "Delete": "Borrar",
-        "Description": "Descripción"
+        "Description": "Descripción",
+        "Transformers_Button": "Grupos de Reglas",
+        "Transformers_Hint": "Importar/Ver tus grupos de reglas.",
+        "Trigger": "Disparador",
+        "Function": "Función",
+        "Execute_Order": "Ejecutar Orden",
+        "Close": "Cerrar",
+        "Add_Transformer": "Añadir Transformador",
+        "Add_Transformer_To_Token": "+ Icono",
+        "Add_Transformer_To_Actor": "+ Actor",
+        "Transformer_Name": "Nombre de Transformador",
+        "Duration": "Duración (en segundos)",
+        "Entity_ID": "ID de Entidad",
+        "Entity_Type": "Tipo de Entidad",
+        "Transformer_Function": "Función de Transformador",
+        "Load_Transformer_Template": "Cargar plantilla de transformador",
+        "Import_Ruleset": "Importar paquete de reglas JSON",
+        "View_Rulesets": "Ver paquetes de reglas instalados",
+        "Version": "Versión",
+        "Error_Empty_Transformer": "No se puede añadir un transformador vacío al array.",
+        "Automation_Setting_Hint": "Necesita refrescar para activar/desactivar",
+        "Automation_Rulesets": "Paquetes de reglas"
     },
     "Token_Action": {
-        "Enable_Drag_Drop_Action": "Habilitar acciones de arrastrar y soltar."
+        "Enable_Drag_Drop_Action": "Habilitar acciones de arrastrar y soltar.",
+        "Enable_Drag_Drop_Hint": "Sobreescribe otros manejadores. Puede dar problemas con otros módulos. Necesita refrescar."
+    },
+    "SWADE_Actions": {
+        "Actions": "Acciones"
+    },
+    "Toolkit_Chat": {
+        "Spend_Benny": "Gastar un Beni para repetir la tirada",
+        "Modifiers": "Modificadores",
+        "Target_Number": "Número Objetivo",
+        "Ammo": "Munición"
+    },
+    "Status_Effects": {
+        "Link_Status_Effects": "Enlazar Efectos de Estado",
+        "SWADE_Shaken": "Aturdido",
+        "SWADE_Distracted": "Distraído",
+        "SWADE_Vulnerable": "Vulnerable",
+        "SWADE_Stunned": "Conmocionado",
+        "SWADE_Entangled": "Aferrado",
+        "SWADE_Bound": "Inmovilizado"
+    },
+    "Active_Effects": {
+        "Enable_Skill_Active_Effects": "Activar Efectos Activos en Habilidades (d!Skillname, m!Skillname)",
+        "Die_Must_Be_Even": "¡El aumento/decremento de dado debe ser un número par!"
     }
 }
