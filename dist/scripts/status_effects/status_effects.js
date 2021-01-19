@@ -26,6 +26,22 @@ class StatusEffects {
             type: Boolean,
             default: false,
         });
+        game.settings.register("swade-toolkit", "wound-status-effects", {
+            name: game.i18n.localize("Status_Effects.Wound_Status_Effects"),
+            scope: "world",
+            config: true,
+            type: Boolean,
+            default: false,
+        });
+    }
+    set_level_effects(type, id) {
+        let target = type == 'token' ? canvas.tokens.get(id) : '';
+        for (let i = 1; i < 7; i++) {
+            if (i <= 2) {
+                // Fatigue
+                target.toggleEffect(`modules/swade-toolkit/assets/icons/f${i}.png`, { active: i === target.actor.data.data.fatigue.value, overlay: false });
+            }
+        }
     }
     startStatusLinkingListeners() {
         if (!game.settings.get("swade-toolkit", "link-status-effects")) {
@@ -75,17 +91,22 @@ class StatusEffects {
         });
         //Status Linking for NPCs
         Hooks.on("updateToken", (scene, tokenDiff, data, diff, userId) => {
-            var _a, _b;
+            var _a, _b, _c, _d;
             if (!game.userId == userId || !diff.diff) {
                 return;
             } //diff is used to stop propagation after the first sync
+            if (game.settings.get("swade-toolkit", "wound-status-effects")) {
+                if ((_b = (_a = data === null || data === void 0 ? void 0 : data.actorData) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.fatigue) {
+                    this.set_level_effects('token', tokenDiff._id);
+                }
+            }
             //sync the sheet and token
             //CAN ONLY DO ONE WAY BINDING
             // Always do Sheet to Token
             // Create a separate listener on tokenHUD that updates sheet when token status is clicked
             if (!tokenDiff.actorLink) {
                 let token = canvas.tokens.get(tokenDiff._id);
-                let obj = (_b = (_a = data.actorData) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.status;
+                let obj = (_d = (_c = data.actorData) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.status;
                 if (!obj) {
                     return;
                 } //only care if status object is updated

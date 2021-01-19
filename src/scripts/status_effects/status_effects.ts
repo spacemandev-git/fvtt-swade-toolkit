@@ -19,12 +19,31 @@ class StatusEffects {
       type: Boolean,
       default: false,
     })
+    game.settings.register("swade-toolkit", "wound-status-effects", {
+      name: game.i18n.localize("Status_Effects.Wound_Status_Effects"),
+      scope: "world",
+      config: true,
+      type: Boolean,
+      default: false,
+    })
   }
+
+  private set_level_effects(type, id) {
+        let target = type == 'token' ? canvas.tokens.get(id) : ''
+        for (let i = 1; i < 7; i++) {
+            if (i <= 2) {
+                // Fatigue
+                target.toggleEffect(`modules/swade-toolkit/assets/icons/f${i}.png`,
+                    {active: i === target.actor.data.data.fatigue.value, overlay: false });
+            }
+        }
+    }
 
   private startStatusLinkingListeners(){
     if(!game.settings.get("swade-toolkit", "link-status-effects")){
       return; //don't do anything if the setting isn't turned on
     }
+
 
     let coreStatusList = [
       'Shaken',
@@ -33,7 +52,8 @@ class StatusEffects {
       'Stunned',
       'Entangled',
       'Bound',
-    ]; 
+    ];
+
 
     //Hack: Add a listener onto the status icons that calls the actor update on the sheet
     Hooks.on("renderTokenHUD", (tokenHUD: TokenHUD, html:JQuery<HTMLElement>, opts:any) => {
@@ -69,6 +89,11 @@ class StatusEffects {
     //Status Linking for NPCs
     Hooks.on("updateToken", (scene:Scene, tokenDiff, data, diff, userId) => {
       if(!game.userId == userId || !diff.diff){return;} //diff is used to stop propagation after the first sync
+        if (game.settings.get("swade-toolkit", "wound-status-effects")) {
+            if (data?.actorData?.data?.fatigue) {
+                this.set_level_effects('token', tokenDiff._id);
+            }
+        }
       //sync the sheet and token
       //CAN ONLY DO ONE WAY BINDING
       // Always do Sheet to Token
@@ -98,7 +123,6 @@ class StatusEffects {
           }
         }
       }
-
       /*
         if(!tokenDiff.actorLink){
           let token:Token = canvas.tokens.get(tokenDiff._id);
