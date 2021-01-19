@@ -27,13 +27,14 @@ class ActiveEffects {
         });
     }
     startSkillModListeners() {
-        Hooks.on("updateActiveEffect", (actor, effect, disabled, diff, userId) => __awaiter(this, void 0, void 0, function* () {
+        const addEffect = (actor, effect, opts, userId) => __awaiter(this, void 0, void 0, function* () {
             if (game.userId != userId || !game.settings.get("swade-toolkit", "enableSkillsActiveEffects")) {
                 return;
             }
             if (!effect.changes.find(el => (el.key.includes("d!") || el.key.includes("m!")))) {
                 return;
             } //only process the AEs with d! and m!
+            let effectedSkills = [];
             for (let change of effect.changes) {
                 if (change.key.startsWith("d!")) {
                     if (change.value % 2 != 0) {
@@ -48,39 +49,14 @@ class ActiveEffects {
                     if (!skill.getFlag("swade-toolkit", "active-effects")) {
                         yield skill.setFlag("swade-toolkit", "active-effects", []);
                     }
-                    if (disabled.disabled && skill.getFlag("swade-toolkit", "active-effects").includes(effect._id)) {
-                        //AE Turned Off
-                        let newSkill = duplicate(skill);
-                        newSkill.data.die.sides -= change.value;
-                        if (newSkill.flags['swade-toolkit']['active-effects']) {
-                            newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
-                        }
-                        else {
-                            newSkill.flags = {
-                                "swade-toolkit": {
-                                    "active-effects": [effect._id]
-                                }
-                            };
-                        }
-                        yield actor.deleteOwnedItem(skill.id);
-                        actor.createOwnedItem(newSkill);
-                    }
-                    else if (!skill.getFlag("swade-toolkit", "active-effects").includes(effect._id)) { //if effect isn't already on this skill
+                    if (!skill.getFlag("swade-toolkit", "active-effects").includes(effect._id)) { //if effect isn't already on this skill
                         //AE Turned On
-                        let newSkill = duplicate(skill);
-                        newSkill.data.die.sides += change.value;
-                        if (newSkill.flags['swade-toolkit']['active-effects']) {
-                            newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                        let skillIdx = effectedSkills.findIndex(el => el.name == skillName);
+                        if (skillIdx == -1) {
+                            effectedSkills.push(duplicate(skill));
+                            skillIdx = effectedSkills.length - 1;
                         }
-                        else {
-                            newSkill.flags = {
-                                "swade-toolkit": {
-                                    "active-effects": [effect._id]
-                                }
-                            };
-                        }
-                        yield actor.deleteOwnedItem(skill.id);
-                        actor.createOwnedItem(newSkill);
+                        effectedSkills[skillIdx].data.die.sides += change.value;
                     }
                 }
                 else if (change.key.startsWith("m!")) {
@@ -92,57 +68,34 @@ class ActiveEffects {
                     if (!skill.getFlag("swade-toolkit", "active-effects")) {
                         yield skill.setFlag("swade-toolkit", "active-effects", []);
                     }
-                    if (disabled.disabled) {
-                        //AE Turned Off
-                        let newSkill = duplicate(skill);
-                        let mod = skill.data.data.die.modifier === "" ? 0 : parseInt(skill.data.data.die.modifier);
-                        newSkill.data.die.modifier = (mod - change.value).toString();
-                        if (newSkill.flags['swade-toolkit']['active-effects']) {
-                            newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
-                        }
-                        else {
-                            newSkill.flags = {
-                                "swade-toolkit": {
-                                    "active-effects": [effect._id]
-                                }
-                            };
-                        }
-                        yield actor.deleteOwnedItem(skill.id);
-                        actor.createOwnedItem(newSkill);
-                    }
-                    else {
+                    if (!skill.getFlag("swade-toolkit", "active-effects").includes(effect._id)) { //if effect isn't already on this skill
                         //AE Turned On
-                        console.debug("AE Turned on");
-                        if (skill.getFlag("swade-toolkit", "active-effects").includes(effect._id)) {
-                            return;
-                        } //effect is already on this skill
-                        let newSkill = duplicate(skill);
-                        let mod = skill.data.data.die.modifier == "" ? 0 : parseInt(skill.data.data.die.modifier);
-                        console.debug("Mod: ", mod);
-                        newSkill.data.die.modifier = (mod + change.value).toString();
-                        if (newSkill.flags['swade-toolkit']['active-effects']) {
-                            newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                        let skillIdx = effectedSkills.findIndex(el => el.name == skillName);
+                        if (skillIdx == -1) {
+                            effectedSkills.push(duplicate(skill));
+                            skillIdx = effectedSkills.length - 1;
                         }
-                        else {
-                            newSkill.flags = {
-                                "swade-toolkit": {
-                                    "active-effects": [effect._id]
-                                }
-                            };
-                        }
-                        yield actor.deleteOwnedItem(skill.id);
-                        actor.createOwnedItem(newSkill);
+                        let mod = skill.data.data.die.modifier === "" ? 0 : parseInt(skill.data.data.die.modifier);
+                        effectedSkills[skillIdx].data.die.modifier = (mod + change.value).toString();
                     }
                 }
             }
-        }));
-        Hooks.on('deleteActiveEffect', (actor, effect, opts, userId) => __awaiter(this, void 0, void 0, function* () {
-            if (game.userId != userId) {
+            for (let updatedSkill of effectedSkills) {
+                //add the effect as "on" on the the skill
+                updatedSkill.flags['swade-toolkit']['active-effects'] = updatedSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
+                yield actor.deleteOwnedItem(updatedSkill._id);
+                actor.createOwnedItem(updatedSkill);
+            }
+        });
+        const deleteEffect = (actor, effect, opts, userId) => __awaiter(this, void 0, void 0, function* () {
+            //item was deleted
+            if (game.userId != userId || !game.settings.get("swade-toolkit", "enableSkillsActiveEffects")) {
                 return;
             }
             if (!effect.changes.find(el => (el.key.includes("d!") || el.key.includes("m!")))) {
                 return;
             } //only process the AEs with d! and m!
+            let effectedSkills = [];
             for (let change of effect.changes) {
                 if (change.key.startsWith("d!")) {
                     let skillName = change.key.split("d!")[1];
@@ -150,11 +103,16 @@ class ActiveEffects {
                     if (!skill) {
                         continue;
                     } //no skill found
-                    let newSkill = duplicate(skill);
-                    newSkill.data.die.sides -= change.value;
-                    newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].filter(el => el != effect._id);
-                    yield actor.deleteOwnedItem(skill.id);
-                    actor.createOwnedItem(newSkill);
+                    if (skill.getFlag("swade-toolkit", "active-effects").includes(effect._id)) {
+                        //if the skill includes this AE
+                        //AE Turned Off
+                        let skillIdx = effectedSkills.findIndex(el => el.name == skillName);
+                        if (skillIdx == -1) {
+                            effectedSkills.push(duplicate(skill));
+                            skillIdx = effectedSkills.length - 1;
+                        }
+                        effectedSkills[skillIdx].data.die.sides -= change.value;
+                    }
                 }
                 else if (change.key.startsWith("m!")) {
                     let skillName = change.key.split("m!")[1];
@@ -162,13 +120,42 @@ class ActiveEffects {
                     if (!skill) {
                         continue;
                     } //no skill found
-                    let newSkill = duplicate(skill);
-                    let mod = skill.data.data.die.modifier === "" ? 0 : parseInt(skill.data.data.die.modifier);
-                    newSkill.data.die.modifier = (mod - change.value).toString();
-                    newSkill.flags['swade-toolkit']['active-effects'] = newSkill.flags['swade-toolkit']['active-effects'].filter(el => el != effect._id);
-                    yield actor.deleteOwnedItem(skill.id);
-                    actor.createOwnedItem(newSkill);
+                    if (!skill.getFlag("swade-toolkit", "active-effects")) {
+                        yield skill.setFlag("swade-toolkit", "active-effects", []);
+                    }
+                    if (skill.getFlag("swade-toolkit", "active-effects").includes(effect._id)) {
+                        //if the effect is on the skill
+                        //AE Turned Off
+                        let skillIdx = effectedSkills.findIndex(el => el.name == skillName);
+                        if (skillIdx == -1) {
+                            effectedSkills.push(duplicate(skill));
+                            skillIdx = effectedSkills.length - 1;
+                        }
+                        let mod = skill.data.data.die.modifier === "" ? 0 : parseInt(skill.data.data.die.modifier);
+                        effectedSkills[skillIdx].data.die.modifier = (mod - change.value).toString();
+                    }
                 }
+            }
+            for (let updatedSkill of effectedSkills) {
+                //update the updated skill to remove the effect flag
+                updatedSkill.flags['swade-toolkit']['active-effects'] = updatedSkill.flags['swade-toolkit']['active-effects'].filter(el => el != effect._id);
+                yield actor.deleteOwnedItem(updatedSkill._id);
+                actor.createOwnedItem(updatedSkill);
+            }
+        });
+        // Need to also do it on createActiveEffect hook so item active effects get triggered
+        Hooks.on("createActiveEffect", (actor, effect, opts, userId) => __awaiter(this, void 0, void 0, function* () {
+            yield addEffect(actor, effect, opts, userId);
+        }));
+        Hooks.on("deleteActiveEffect", (actor, effect, opts, userId) => __awaiter(this, void 0, void 0, function* () {
+            yield deleteEffect(actor, effect, opts, userId);
+        }));
+        Hooks.on("updateActiveEffect", (actor, effect, opts, diff, userId) => __awaiter(this, void 0, void 0, function* () {
+            if (opts.disabled) {
+                yield deleteEffect(actor, effect, opts, userId);
+            }
+            else {
+                yield addEffect(actor, effect, opts, userId);
             }
         }));
     }

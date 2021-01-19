@@ -2,6 +2,8 @@
 Please consider making a one time or recurring contribution to help continue to fuel module updates. Ko-Fi contributions are one of the positive ways I actually know if what I write is being used and if it's valuable for the community. 
 
 # Changelog
+### 1.1.1
+- Active Effects on skills now apply when you drag + drop an item onto the sheet, and can handle both die and modifier on the same skill in the same effect
 ### 1.1.0
 - Active Effects on Skills: If you toggle this setting on, you can create active effects on skills by setting the value to "m!Skillname" to change the modifier of a skill or "d!Skillname" for die type. It's only additive, so if you want to *reduce* the value, use a negative number.
 - Status Effects linking: If you turn this setting on, tokens will sync their core statuses (Shaken, Stunned, Bound, Entangled, Vulnerable, Distracted) between the token and the sheet (switching on one will switch on the other, and vice versa). 

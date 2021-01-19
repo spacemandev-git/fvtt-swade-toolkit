@@ -3,7 +3,7 @@
   "title": "SWADE Toolkit",
   "description": "<p>A collection of macros and automation API for the SWADE system. If you find this module useful, please consider contributing to the maintenance fund at <a href='ko-fi.com/spacemandev'>ko-fi.com/spacemandev</a> </p>",
   "author": "spacemandev (spacemandev#6256)",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "minimumCoreVersion": "0.6.0",
   "compatibleCoreVersion": "0.7.9",
   "url": "",
