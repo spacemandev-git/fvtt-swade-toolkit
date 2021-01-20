@@ -29,12 +29,22 @@ class StatusEffects {
   }
 
   private set_level_effects(type, id) {
-        let target = type == 'token' ? canvas.tokens.get(id) : ''
+        let target = type == 'token' ? canvas.tokens.get(id) : id.getActiveTokens()[0];
         for (let i = 1; i < 7; i++) {
             if (i <= 2) {
                 // Fatigue
-                target.toggleEffect(`modules/swade-toolkit/assets/icons/f${i}.png`,
-                    {active: i === target.actor.data.data.fatigue.value, overlay: false });
+                let icon = `modules/swade-toolkit/assets/icons/f${i}.png`
+                let should_be = i === target.actor.data.data.fatigue.value;
+                let is = target.data.effects.indexOf(icon) >= 0;
+                if (should_be !== is) {
+                  target.toggleEffect(icon, {active: should_be, overlay: false });
+                }
+            }
+            let icon = `modules/swade-toolkit/assets/icons/w${i}.png`
+            let should_be = i === target.actor.data.data.wounds.value;
+            let is = target.data.effects.indexOf(icon) >= 0;
+            if (should_be !== is) {
+              target.toggleEffect(icon, {active: should_be, overlay: false });
             }
         }
     }
@@ -90,7 +100,7 @@ class StatusEffects {
     Hooks.on("updateToken", (scene:Scene, tokenDiff, data, diff, userId) => {
       if(!game.userId == userId || !diff.diff){return;} //diff is used to stop propagation after the first sync
         if (game.settings.get("swade-toolkit", "wound-status-effects")) {
-            if (data?.actorData?.data?.fatigue) {
+            if (data?.actorData?.data?.fatigue || data?.actorData?.data?.wounds) {
                 this.set_level_effects('token', tokenDiff._id);
             }
         }
@@ -185,6 +195,11 @@ class StatusEffects {
     // Sheet was changed so make a AE, which will trigger the above hook and make a token 
     Hooks.on("updateActor", (actor:Actor, change:any, opts:any, userId) => {
       if(game.userId != userId && opts.diff){return;}
+        if (game.settings.get("swade-toolkit", "wound-status-effects")) {
+          if (change.data?.fatigue || change.data?.wounds) {
+              this.set_level_effects('actor', actor);
+          }
+        }
       if(change.data?.status){
         for(let status of coreStatusList){
           if(change.data.status[`is${status}`]){
