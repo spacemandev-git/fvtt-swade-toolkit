@@ -84,7 +84,7 @@ class ActiveEffects {
                 //add the effect as "on" on the the skill
                 updatedSkill.flags['swade-toolkit']['active-effects'] = updatedSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
                 yield actor.deleteOwnedItem(updatedSkill._id);
-                actor.createOwnedItem(updatedSkill);
+                actor.createOwnedItem(updatedSkill, { renderSheet: false });
             }
         });
         const deleteEffect = (actor, effect, opts, userId) => __awaiter(this, void 0, void 0, function* () {
@@ -140,7 +140,7 @@ class ActiveEffects {
                 //update the updated skill to remove the effect flag
                 updatedSkill.flags['swade-toolkit']['active-effects'] = updatedSkill.flags['swade-toolkit']['active-effects'].filter(el => el != effect._id);
                 yield actor.deleteOwnedItem(updatedSkill._id);
-                actor.createOwnedItem(updatedSkill);
+                actor.createOwnedItem(updatedSkill, { renderSheet: false });
             }
         });
         // Need to also do it on createActiveEffect hook so item active effects get triggered

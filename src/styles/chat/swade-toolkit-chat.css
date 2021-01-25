@@ -39,11 +39,3 @@
   display:flex;
   flex-direction: row;
 }
-
-.hidden{
-  display:none
-}
-
-.shown{
-  display:block;
-}

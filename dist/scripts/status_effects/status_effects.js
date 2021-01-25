@@ -26,6 +26,33 @@ class StatusEffects {
             type: Boolean,
             default: false,
         });
+        game.settings.register("swade-toolkit", "wound-status-effects", {
+            name: game.i18n.localize("Status_Effects.Wound_Status_Effects"),
+            scope: "world",
+            config: true,
+            type: Boolean,
+            default: false,
+        });
+    }
+    set_level_effects(type, id) {
+        let target = type == 'token' ? canvas.tokens.get(id) : id.getActiveTokens()[0];
+        for (let i = 1; i < 7; i++) {
+            if (i <= 2) {
+                // Fatigue
+                let icon = `modules/swade-toolkit/assets/icons/f${i}.png`;
+                let should_be = i === target.actor.data.data.fatigue.value;
+                let is = target.data.effects.indexOf(icon) >= 0;
+                if (should_be !== is) {
+                    target.toggleEffect(icon, { active: should_be, overlay: false });
+                }
+            }
+            let icon = `modules/swade-toolkit/assets/icons/w${i}.png`;
+            let should_be = i === target.actor.data.data.wounds.value;
+            let is = target.data.effects.indexOf(icon) >= 0;
+            if (should_be !== is) {
+                target.toggleEffect(icon, { active: should_be, overlay: false });
+            }
+        }
     }
     startStatusLinkingListeners() {
         if (!game.settings.get("swade-toolkit", "link-status-effects")) {
@@ -75,17 +102,22 @@ class StatusEffects {
         });
         //Status Linking for NPCs
         Hooks.on("updateToken", (scene, tokenDiff, data, diff, userId) => {
-            var _a, _b;
+            var _a, _b, _c, _d, _e, _f;
             if (!game.userId == userId || !diff.diff) {
                 return;
             } //diff is used to stop propagation after the first sync
+            if (game.settings.get("swade-toolkit", "wound-status-effects")) {
+                if (((_b = (_a = data === null || data === void 0 ? void 0 : data.actorData) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.fatigue) || ((_d = (_c = data === null || data === void 0 ? void 0 : data.actorData) === null || _c === void 0 ? void 0 : _c.data) === null || _d === void 0 ? void 0 : _d.wounds)) {
+                    this.set_level_effects('token', tokenDiff._id);
+                }
+            }
             //sync the sheet and token
             //CAN ONLY DO ONE WAY BINDING
             // Always do Sheet to Token
             // Create a separate listener on tokenHUD that updates sheet when token status is clicked
             if (!tokenDiff.actorLink) {
                 let token = canvas.tokens.get(tokenDiff._id);
-                let obj = (_b = (_a = data.actorData) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.status;
+                let obj = (_f = (_e = data.actorData) === null || _e === void 0 ? void 0 : _e.data) === null || _f === void 0 ? void 0 : _f.status;
                 if (!obj) {
                     return;
                 } //only care if status object is updated
@@ -170,11 +202,16 @@ class StatusEffects {
         });
         // Sheet was changed so make a AE, which will trigger the above hook and make a token 
         Hooks.on("updateActor", (actor, change, opts, userId) => {
-            var _a;
+            var _a, _b, _c;
             if (game.userId != userId && opts.diff) {
                 return;
             }
-            if ((_a = change.data) === null || _a === void 0 ? void 0 : _a.status) {
+            if (game.settings.get("swade-toolkit", "wound-status-effects")) {
+                if (((_a = change.data) === null || _a === void 0 ? void 0 : _a.fatigue) || ((_b = change.data) === null || _b === void 0 ? void 0 : _b.wounds)) {
+                    this.set_level_effects('actor', actor);
+                }
+            }
+            if ((_c = change.data) === null || _c === void 0 ? void 0 : _c.status) {
                 for (let status of coreStatusList) {
                     if (change.data.status[`is${status}`]) {
                         //status was changed to true

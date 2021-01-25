@@ -72,7 +72,7 @@ class ActiveEffects{
         //add the effect as "on" on the the skill
         updatedSkill.flags['swade-toolkit']['active-effects'] = updatedSkill.flags['swade-toolkit']['active-effects'].concat([effect._id]);
         await actor.deleteOwnedItem(updatedSkill._id);
-        actor.createOwnedItem(updatedSkill);
+        actor.createOwnedItem(updatedSkill, {renderSheet:false});
       }
     }
 
@@ -122,7 +122,7 @@ class ActiveEffects{
         //update the updated skill to remove the effect flag
         updatedSkill.flags['swade-toolkit']['active-effects'] = updatedSkill.flags['swade-toolkit']['active-effects'].filter(el => el != effect._id)
         await actor.deleteOwnedItem(updatedSkill._id);
-        actor.createOwnedItem(updatedSkill);
+        actor.createOwnedItem(updatedSkill, {renderSheet:false});
       }
       
     }

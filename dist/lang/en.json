@@ -66,6 +66,7 @@
   },
   "Status_Effects": {
     "Link_Status_Effects": "Link Status Effects",
+    "Wound_Status_Effects": "Show wounds and fatigue over tokens (requires Link Status Effects)",
     "SWADE_Shaken": "Shaken",
     "SWADE_Distracted": "Distracted",
     "SWADE_Vulnerable": "Vulnerable",
